@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Crusader - Follow the Path to Glory!</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="Progressive web app to keep track of Warhammer 40,000 crusades" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://crusader.facerix.com/" />
+    <meta property="og:title" content="Crusader - Follow the Path to Glory!" />
+    <meta property="og:description" content="Progressive web app to keep track of Warhammer 40,000 crusades" />
+    <meta property="og:url" content="https://crusader.facerix.com/" />
+    <meta property="og:type" content="website" />
+  
+    <link rel="icon" href="/icon512_maskable.png" type="image/png" />
+    <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
+
+    <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <style>
+      h1 {
+        /* font-size: 128px; */
+        font-variant: common-ligatures small-caps;
+      }
+
+      h2 {
+        font-size: 48px;
+      }
+
+      main {
+        align-items: center;
+        justify-content: center;
+        gap: 1.5em;
+
+        a {
+          text-decoration: none;
+          font-variant: common-ligatures small-caps;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    </style>
+  </head>
+
+  <body class="fill-height">
+    <site-header></site-header>
+    <main>
+      <!-- <img src="/sword.svg" id="hero-image" alt="Crusader logo" />
+      <h1>Crusader</h1>
+      <h2>Pursue your path to glory!</h2> -->
+    
+      <a href="/rosters/">
+        <h3>
+          <img src="/images/HQ.svg" alt="armies" />
+          <span class="caption">Crusade Forces</span>
+        </h3>
+      </a>
+    </main>
+
+    <footer id="main-foot">
+      A&nbsp;<a href="/about.html">Facerix</a>&nbsp;creation
+    </footer>
+  </body>
+  <script src="/index.js" type="module"></script>
+</html>

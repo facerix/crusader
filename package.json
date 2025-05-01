@@ -1,0 +1,14 @@
+{
+  "name": "crusader",
+  "version": "1.0.0",
+  "description": "Progressive web app to keep track of Warhammer 40,000 crusades",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --no-browser"
+  },
+  "author": "Rylee Corradini",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
