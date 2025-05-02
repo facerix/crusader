@@ -131,7 +131,13 @@
         .unit-pts {
           border-left: 1px solid;
         }
-     }
+
+        img {
+          width: 24px;
+          margin: 0.25em
+        }
+      }
+
     }
 
     site-header {
@@ -146,6 +152,33 @@
 
       button {
         border: 1px dashed;
+      }
+    }
+
+    dialog {
+      header {
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px groove;
+
+        button {
+          padding: 5px;
+          border: 1px transparent;
+        }
+      }
+
+      footer {
+        height: inherit;
+        min-height: fit-content;
+        margin-top: 0.5rem;
+        border-top: 1px groove;
+        padding-top: 0.5rem;
+        display: flex;
+        justify-content: end;
+
+        button {
+          font-weight: bold;
+        }
       }
     }
   </style>
@@ -190,7 +223,21 @@
   <confirmation-modal></confirmation-modal>
 
   <dialog id="unit-modal" closedby="any">
-    <unit-editor></unit-editor>
+    <header>
+      <h3>Unit Card</h3>
+      <button>
+        <!-- <img id="btnDelete" src="/images/delete.svg" alt="delete unit" /> -->
+        <img id="btnClose" src="/images/close.svg" alt="close modal" tabindex="50" />
+      </button>
+    </header>
+    <unit-card></unit-card>
+    <footer>
+      <button id="btnSave">
+        <img src="/images/card-details.svg" alt="card" />
+        Save Card
+      </button>
+    </footer>
+    <!-- <unit-editor></unit-editor> -->
   </dialog>
 </body>
 <script src="roster.js" type="module" blocking="render"></script>

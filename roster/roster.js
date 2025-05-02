@@ -1,16 +1,15 @@
 import '../components/SiteHeader.js';
-import '../components/UnitEditor.js';
+import '../components/UnitCard.js';
 import '../components/ConfirmationModal.js';
 import DataStore from '../src/DataStore.js';
-import { parseArmyList } from '../src/parser.js';
-import { v4WithTimestamp } from '../src/uuid.js';
 import { FACTION_IMAGE_URLS, FACTION_NAMES } from '../src/factions.js';
 import { h } from '../src/domUtils.js';
 
 const whenLoaded = Promise.all(
   [
     customElements.whenDefined("site-header"),
-    customElements.whenDefined("unit-editor"),
+    // customElements.whenDefined("unit-editor"),
+    customElements.whenDefined("unit-card"),
     customElements.whenDefined("confirmation-modal"),
   ],
 );
@@ -21,10 +20,12 @@ const RosterView = (viewRoot, rosterData) => {
   const unitList = viewRoot.querySelector(".unit-list");
   const btnAddUnit = document.querySelector("#btnAddUnit");
   const unitModal = document.querySelector("#unit-modal");
-  const unitEditor = document.querySelector("unit-editor");
+  const unitCard = document.querySelector("unit-card");
+  const btnClose = document.querySelector("#btnClose");
+  const btnSave = document.querySelector("#btnSave");
   let activeUnit = null;
 
-  const { armyName, faction, units } = rosterData;
+  const { id, armyName, faction, units } = rosterData;
 
   armyNameHeader.innerText = armyName;
   factionImg.src = FACTION_IMAGE_URLS[faction];
@@ -44,22 +45,32 @@ const RosterView = (viewRoot, rosterData) => {
     activeUnit = evt.target.closest(".unit-summary");
     if (activeUnit) {
       const unitDetails = units[activeUnit.dataset.unitIndex];
-      unitEditor.data = unitDetails;
+      unitCard.unit = unitDetails;
       unitModal.showModal();
     }
   });
 
   btnAddUnit.addEventListener("click", () => {
-    unitEditor.data = {};
+    unitCard.unit = {};
     unitModal.showModal();
   });
 
-  unitEditor.addEventListener("save", evt => {
-    const { name, alias, points, crusadePoints } = evt.detail;
+  btnClose.addEventListener("click", () => {
+    unitModal.close();
+
+    // TODO
+    // if (evt.detail.hasUnsavedChanges) {
+    //   if (confirm("Discard your updates?")) {
+    //   }
+    // }
+  })
+
+  btnSave.addEventListener("click", () => {
+    const { name, alias, points, crusadePoints } = unitCard.unit;
     unitModal.close();
 
     // update saved data in memory
-    units[activeUnit.dataset.unitIndex] = evt.detail;
+    units[activeUnit.dataset.unitIndex] = { ...unitCard.unit };
 
     // TODO: update saved data in DataStore
 
@@ -67,14 +78,6 @@ const RosterView = (viewRoot, rosterData) => {
     activeUnit.querySelector(".unit-name").innerText = alias ? `${alias} (${name})` : name;
     activeUnit.querySelector(".points").innerText = points ?? '';
     activeUnit.querySelector(".crusadePoints").innerText = crusadePoints ?? '';
-  });
-  
-  unitEditor.addEventListener("cancel", evt => {
-    unitModal.close();
-    // if (evt.detail.hasUnsavedChanges) {
-    //   if (confirm("Discard your updates?")) {
-    //   }
-    // }
   });
 }
 
