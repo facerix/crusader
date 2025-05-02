@@ -12,7 +12,7 @@ unit-card {
   background-position: top left;
   align-items: center;
 
-  #xp {
+  [name=xp] {
     border: 0;
     background: transparent;
     font-size: larger;
@@ -34,10 +34,6 @@ unit-card {
       accent-color: darkred;
       height: 1.25rem;
       width: 1.25rem;
-    }
-
-    #rank0 {
-      display: none;
     }
   }
 }
@@ -154,37 +150,71 @@ unit-card {
 .border-top-none {
   border-top: none;
 }
+
+.ranks {
+  display: flex;
+  gap: 0.5rem;
+  height: 100%;
+  height: -webkit-fill-available;
+  margin-top: 1rem;
+
+  .rank {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    img {
+      margin: auto;
+    }
+
+    .range {
+      display: flex;
+      align-items: center;
+      background-color: black;
+      color: white;
+
+      span {
+        font-size: x-small;
+        font-variant: common-ligatures small-caps;
+        font-weight: bold;
+        padding: 0 0.5rem;
+      }
+
+      input {
+        font-size: xx-large;
+        accent-color: white;
+        height: 1.25rem;
+        width: 1.25rem;
+      }
+    }
+  }
+}
 `;
 
 const TEMPLATE = `
-<header class="u-hidden">
-  <h2 id="armyName">Loading...</h2>
-  <img src="/images/loader.svg" id="faction" alt="army faction logo" />
-</header>
-
 <!-- top row: Unit type/name/count, points -->
 <div class="u-flex gap-2">
   <div class="u-flex--65 u-flex u-flex--column gap-2">
     <div class="u-flex gap-2 items-center bg-black">
       <div class="u-flex--20 row-header p-l-2">UNIT NAME</div>
-      <input id="unitName" type="text" class="u-flex--stretch p-1 h-10 text-lg" placeholder="Enter unit name">
+      <input name="unitName" type="text" class="u-flex--stretch p-1 h-10 text-lg" placeholder="Enter unit name">
     </div>
     <div class="u-flex gap-2 items-center bg-black">
       <div class="u-flex--20 row-header p-l-2">UNIT TYPE</div>
-      <input id="unitType" type="text" class="u-flex--stretch p-1 h-10 text-lg" readonly>
+      <input name="unitType" type="text" class="u-flex--stretch p-1 h-10 text-lg" readonly>
     </div>
   </div>
   <div class="u-flex u-flex--column u-flex--11">
     <div class="row-header p-1 text-xs text-center">No. of Models</div>
-    <input id="modelCount" type="number" class="u-flex--stretch p-1 text-center text-xl" readonly>
+    <input name="modelCount" type="number" class="u-flex--stretch p-1 text-center text-xl" readonly>
   </div>
   <div class="u-flex u-flex--column u-flex--11">
     <div class="row-header p-1 text-xs text-center">Points Cost</div>
-    <input id="pointsCost" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
+    <input name="pointsCost" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
   </div>
   <div class="u-flex u-flex--column u-flex--11">
     <div class="row-header p-1 text-xs text-center">Crusade Points</div>
-    <input id="crusadePoints" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
+    <input name="crusadePoints" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
   </div>
 </div>
 
@@ -192,7 +222,7 @@ const TEMPLATE = `
 <div class="u-flex gap-2 h-40">
   <div class="u-flex--25 u-flex u-flex--column">
       <div class="row-header p-1 text-center">WARGEAR</div>
-      <textarea id="wargear" class="p-1 w-full resize-none u-flex--stretch" placeholder="List wargear here"></textarea>
+      <textarea name="wargear" class="p-1 w-full resize-none u-flex--stretch" placeholder="List wargear here"></textarea>
   </div>
   
   <div class="u-flex--75">
@@ -225,7 +255,7 @@ const TEMPLATE = `
 <div class="u-flex gap-2 h-40">
   <div class="u-flex--25 u-flex u-flex--column">
       <div class="row-header p-1 text-center">ENHANCEMENTS</div>
-      <textarea id="enhancements" class="p-1 w-full resize-none u-flex--stretch" placeholder="List enhancements here"></textarea>
+      <textarea name="enhancements" class="p-1 w-full resize-none u-flex--stretch" placeholder="List enhancements here"></textarea>
   </div>
   
   <div class="u-flex--75">
@@ -258,31 +288,59 @@ const TEMPLATE = `
 <div class="u-flex gap-2 h-30">
   <div class="u-flex u-flex--column u-flex--11">
     <div class="row-header p-1 text-xs text-center">Battles<br/>Played</div>
-    <input id="battlesPlayed" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
+    <input name="battlesPlayed" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
   </div>
   <div class="u-flex u-flex--column u-flex--11">
     <div class="row-header p-1 text-xs text-center">Battles Survived</div>
-    <input id="battlesSurvived" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
+    <input name="battlesSurvived" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
   </div>
   <div class="u-flex u-flex--column u-flex--11">
     <div class="row-header p-1 text-xs text-center">Enemy Units Destroyed</div>
-    <input id="unitsKilled" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
+    <input name="unitsKilled" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
   </div>
 
   <div class="u-flex--65 u-flex gap-2 unit-xp">
-    <input id="xp" type="number" value="0" min="0" />
-    <div class="rankCheckmarks">
-      <input id="rank1" name="rank" type="radio" readonly />
-      <input id="rank2" name="rank" type="radio" readonly />
-      <input id="rank3" name="rank" type="radio" readonly />
-      <input id="rank4" name="rank" type="radio" readonly />
-      <input id="rank0" name="rank" type="radio" readonly />
+    <input name="xp" type="number" value="0" min="0" />
+    <div class="ranks">
+      <div class="rank">
+          <img src="/images/Rank_Blooded.png">
+          <div class="range">
+            <span>6-15</span>
+            <input id="rank1" type="checkbox">
+          </div>
+      </div>
+      <div class="rank">
+          <img src="/images/Rank_BattleHardened.png">
+          <div class="range">
+            <span>16-30</span>
+            <input id="rank2" type="checkbox">
+          </div>
+      </div>
+      <div class="rank">
+          <img src="/images/Rank_Heroic.png">
+          <div class="range">
+            <span>31-50</span>
+            <input id="rank3" type="checkbox">
+          </div>
+      </div>
+      <div class="rank">
+          <img src="/images/Rank_Legendary.png">
+          <div class="range">
+            <span>51+</span>
+            <input id="rank4" type="checkbox">
+          </div>
+      </div>
     </div>
   </div>
 </div>`
 
 class UnitCard extends HTMLElement {
 	#data = null;
+  #form = null;
+
+  #init() {
+    this.#form = this.querySelector("form");
+  }
 
 	set unit(data) {
 		this.#data = data;
@@ -290,43 +348,63 @@ class UnitCard extends HTMLElement {
 	}
 
   get unit() {
-		return { ...this.#data };
+    const data = new FormData(this.#form);
+    return {
+      alias: data.get("unitName"),
+      name: data.get("unitType"),
+      points: data.get("pointsCost"),
+      crusadePoints: data.get("crusadePoints"),
+      wargear: data.get("wargear"),
+      enhancements: data.get("enhancements"),
+      xp: data.get("xp"),
+    };
 	}
 
 	hydrate() {
+    if (!this.#form) {
+      this.#init();
+    }
 		if (this.#data) {
-      const { name, alias, points, crusadePoints, wargear, enhancements, modelCount } = this.#data;
+      const { name, alias, points, crusadePoints, wargear, enhancements, modelCount, xp } = this.#data;
 
-      this.querySelector("#unitName").value = alias ?? "";
-      this.querySelector("#unitType").value = name;
-      this.querySelector("#modelCount").value = modelCount ?? "1";
-      this.querySelector("#pointsCost").value = points;
-      this.querySelector("#crusadePoints").value = crusadePoints ?? "";
-      this.querySelector("#wargear").value = wargear ?? "";
-      this.querySelector("#enhancements").value = enhancements ?? "";
+      this.querySelector("[name=unitName]").value = alias ?? "";
+      this.querySelector("[name=unitType]").value = name;
+      this.querySelector("[name=modelCount]").value = modelCount ?? "1";
+      this.querySelector("[name=pointsCost]").value = points;
+      this.querySelector("[name=crusadePoints]").value = crusadePoints ?? "";
+      this.querySelector("[name=wargear]").value = wargear ?? "";
+      this.querySelector("[name=enhancements]").value = enhancements ?? "";
+      this.querySelector("[name=xp]").value = xp ?? "0";
     
-      const rank0 = this.querySelector("#rank0");
-      const rank1 = this.querySelector("#rank1");
-      const rank2 = this.querySelector("#rank2");
-      const rank3 = this.querySelector("#rank3");
-      const rank4 = this.querySelector("#rank4");
-      this.querySelector("#xp").addEventListener("change", evt => {
+      const rankChecks = [
+        this.querySelector("#rank1"),
+        this.querySelector("#rank2"),
+        this.querySelector("#rank3"),
+        this.querySelector("#rank4")
+      ];
+      this.querySelector("[name=xp]").addEventListener("change", evt => {
         const { value } = evt.target;
-        if (value < 6) {
-          rank0.checked = true;
-        } else if (value > 5 && value < 16) {
-          rank1.checked = true;
+        let checked = null;
+        if (value > 5 && value < 16) {
+          checked = rankChecks[0];
         } else if (value >= 16 && value < 31) {
-          rank2.checked = true;
+          checked = rankChecks[1];
+        } else if (value > 30 && value < 51) {
+          checked = rankChecks[2];
+        } else if (value > 50) {
+          checked = rankChecks[3];
         }
+        rankChecks.forEach(c => {
+          c.checked = (c === checked);
+        })
       });
 
-      this.querySelector("#unitName").focus();
+      this.querySelector("[name=unitName]").focus();
 		}
 	}
 
 	connectedCallback() {
-		this.innerHTML = `<style>${CSS}</style>${TEMPLATE}`;
+		this.innerHTML = `<style>${CSS}</style><form>${TEMPLATE}</form>`;
     this.hydrate();
 	}
 }
