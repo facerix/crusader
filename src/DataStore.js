@@ -143,8 +143,8 @@ class DataStore extends EventTarget {
       this.#removeStorageForRoster(id);
       this.#rosters = this.#rosters.filter(r => r.id !== id);
       this.#unitsById.delete(id);
-      // this.#reindex();
-      // this.#emitChangeEvent("delete", [id]);
+      this.#reindex();
+      this.#emitChangeEvent("delete", [id]);
     }
   }
 }
