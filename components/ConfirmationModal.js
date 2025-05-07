@@ -127,79 +127,81 @@ const CSS = `
 `;
 
 class ConfirmationModal extends HTMLElement {
-	#ready = false;
-    #message = "";
-    #modal = null;
+  #ready = false;
+  #message = "";
+  #context = "default";
+  #modal = null;
 
-    constructor() {
-        super();
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    // Create shadow root
+    const shadow = this.attachShadow({ mode: "open" });
+    const styles = document.createElement("style");
+    styles.innerHTML = CSS;
+    shadow.appendChild(styles);
+
+    // create the internal implementation
+    this.#modal = h("dialog", { closedby: "any" }, [
+      h("header", {}, [
+        h("h3", { innerText: "Confirmation" }),
+        h("button", { id: "close-modal" }, [
+          h("img", { src: "/images/close.svg", alt: "close", width: 32 })
+        ])
+      ]),
+      h("form", { method: "dialog", autocomplete: "off" }, [
+        h("p", { id: "message", innerText: "Are you sure?" }),
+        h("div", { className: "actions" }, [
+          h("input", { type: "button", id: "btnCancel", value: "Cancel" }),
+          h("input", { type: "submit", id: "btnOk", value: "OK" }),
+        ])
+      ])
+    ]);
+    shadow.appendChild(this.#modal);
+  }
+
+  #onClose(evt) {
+    evt.preventDefault();
+    this.#modal?.close();
+  }
+
+  #init() {
+    const closeHandler = this.#onClose.bind(this);
+    this.shadowRoot.querySelector("#close-modal").addEventListener("click", closeHandler);
+    this.shadowRoot.querySelector("#btnCancel").addEventListener("click", closeHandler);
+
+    this.shadowRoot.querySelector("dialog form").addEventListener("submit", (evt) => {
+      if (evt.submitter.id === "btnOk") {
+        this.#emit("confirm");
+      }
+    });
+    this.#ready = true;
+  }
+
+  #emit(eventName) {
+    const customEvent = new CustomEvent(eventName, { detail: { context: this.#context } });
+    this.dispatchEvent(customEvent);
+  }
+
+  render() {
+    // if we've already been attached to the document, 
+    // replace the contents of each slot with the latest data
+    if (this.#ready) {
+      this.shadowRoot.querySelector("#message").innerText = this.#message;
     }
+  }
 
-	connectedCallback() {
-		// Create shadow root
-		const shadow = this.attachShadow({ mode: "open" });
-		const styles = document.createElement("style");
-		styles.innerHTML = CSS;
-		shadow.appendChild(styles);
-
-		// create the internal implementation
-		this.#modal = h("dialog", { closedby: "any" }, [
-            h("header", {}, [
-                h("h3", { innerText: "Confirmation"}),
-                h("button", { id: "close-modal" }, [
-                    h("img", { src: "/images/close.svg", alt: "close", width: 32 })
-                ])
-            ]),
-            h("form", { method: "dialog", autocomplete: "off" }, [
-                h("p", { id: "message", innerText: "Are you sure?" }),
-                h("div", { className: "actions" }, [
-                    h("input", { type: "button", id: "btnCancel", value: "Cancel" }),
-                    h("input", { type: "submit", id: "btnOk", value: "OK" }),
-                ])
-            ])
-        ]);
-		shadow.appendChild(this.#modal);
-	}
-
-    #onClose(evt) {
-        evt.preventDefault();
-        this.#modal?.close();
+  showModal(caption, context) {
+    this.#message = caption;
+    this.#context = context;
+    if (!this.#ready) {
+      this.#init();
     }
-
-    #init() {
-        const closeHandler = this.#onClose.bind(this);
-        this.shadowRoot.querySelector("#close-modal").addEventListener("click", closeHandler);
-        this.shadowRoot.querySelector("#btnCancel").addEventListener("click", closeHandler);
-
-        this.shadowRoot.querySelector("dialog form").addEventListener("submit", (evt) => {
-            if (evt.submitter.id === "btnOk") {
-                this.#emit("confirm");
-            }
-        });
-        this.#ready = true;
-    }
-
-    #emit(eventName, detail = {}) {
-        const customEvent = new CustomEvent(eventName, { detail });
-		this.dispatchEvent(customEvent);
-    }
-
-	render() {
-		// if we've already been attached to the document, 
-		// replace the contents of each slot with the latest data
-        if (this.#ready) {
-            this.shadowRoot.querySelector("#message").innerText = this.#message;
-        }
-	}
-
-    showModal(caption) {
-        this.#message = caption;
-        if (!this.#ready) {
-            this.#init();
-        }
-        this.render();
-        this.#modal?.showModal();
-    }
+    this.render();
+    this.#modal?.showModal();
+  }
 }
 
 window.customElements.define('confirmation-modal', ConfirmationModal);

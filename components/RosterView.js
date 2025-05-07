@@ -1,158 +1,205 @@
-// import '../components/RecipeEditor.js'
-import { jsx, listify } from '../src/domUtils.js';
-// import RecipeCollection from '../src/RecipeCollection.js';
-// import { getRecipeSlug } from "../src/slug.js";
-// import { IngredientList } from './IngredientList.js';
+import './UnitCard.js';
+import './RosterEditor.js';
+import './ConfirmationModal.js';
+import { FACTION_IMAGE_URLS, FACTION_NAMES } from '../src/factions.js';
+import { h, jsx } from '../src/domUtils.js';
+import DataStore from '../src/DataStore.js';
 
-// const whenLoaded = Promise.all(
-// 	[
-// 		customElements.whenDefined("recipe-editor")
-// 	],
-// );
+const UnitRow = (unit, index) => {
+  const nameText = unit.alias ? `${unit.alias} (${unit.name})` : unit.name;
+  const row = h("div", { className: "unit-summary" }, [
+    h("span", { className: "unit-name", innerText: nameText }),
+    h("span", { className: "unit-pts points", innerText: unit.points }),
+    h("span", { className: "unit-pts crusadePoints", innerText: unit.crusadePoints ?? '' }),
+  ]);
+  row.dataset.unitId = unit.id;
+  row.dataset.unitIndex = index;
+  return row;
+}
 
-const CSS = `
-	
+const TEMPLATE = `
+<header>
+  <div>
+    <h2 id="armyName">Loading...</h2>
+    <!-- <input /> -->
+  </div>
+  <img src="/images/loader.svg" id="faction" alt="army faction logo" />
+  <div class="bubble" id="battles" data-caption="Battles">-</div>
+  <div class="bubble" id="victories" data-caption="Victories">-</div>
+  <div class="bubble" id="requisitionPoints" data-caption="Req&nbsp;pts">-</div>
+</header>
+
+<hr />
+
+<div class="u-flex units-header">
+  <span class="unit-name">Unit Name</span>
+  <span class="unit-pts">Points<br/>Value</span>
+  <span class="unit-pts">Crusade<br/>Points</span>
+</div>
+<div class="unit-list"></div>
+<div class="u-flex unit-actions">
+  <button id="btnAddUnit">
+    <img src="/images/add-row.svg" alt="plus icon" />
+    Add a unit
+  </button>
+</div>
+
+<dialog id="unit-modal" closedby="any">
+  <header>
+    <h3>Unit Card</h3>
+    <button>
+      <img id="btnClose" src="/images/close.svg" alt="close modal" tabindex="50" />
+    </button>
+  </header>
+  <unit-card></unit-card>
+  <footer>
+    <button id="btnDeleteUnit">
+      <img src="/images/delete.svg" alt="trash" />
+      Delete Unit
+    </button>
+    <button id="btnSave">
+      <img src="/images/card-details.svg" alt="card" />
+      Save Unit
+    </button>
+  </footer>
+</dialog>
+<dialog id="army-modal" closedby="any">
+  <roster-editor title="Edit Roster"></roster-editor>
+</dialog>
+<confirmation-modal></confirmation-modal>
 `;
 
-const Instructions = (instructionList) => {
-	return jsx`
-		<div class="instructions">
-			<h4>Instructions</h4>
-			${listify(instructionList, true)}
-		</div>
-	`;
-}
-
 class RosterView extends HTMLElement {
-	#recipe = null;
-	#article = null;
-	#editor = null;
-	#modal = null;
+  #data = null;
 
-	/**
-	 * @param {{ sourceUrl: string | URL; thumbnail: string; title: string; ingredients: object[]; instructions: string[]; }} recipe
-	 */
-	set recipe(recipe) {
-		this.#recipe = recipe;
-		this.innerHTML = jsx`
-			<style>${CSS}</style>
-			<article> </article>
-			<dialog>
-				<recipe-editor title="Edit Recipe"></recipe-editor>
-			</dialog>
-		`;
-	}
+  constructor() {
+    super();
+    this.#init();
+  }
 
-	hydrate() {
-		if (this.#recipe) {
-			const { id, title, thumbnail, sourceUrl, ingredients, instructions } = this.#recipe;
-			this.#article.innerHTML = jsx`
-				<div class='recipe-image'>
-					<img src='${thumbnail}' alt='${title}' />
-					<button class='icon' id='hide' title='Hide image'></button>
-				</div>
-				<div class='recipe-detail'>
-					<header>
-						<h3>${title}</h3>
-						<div class="actions">
-							<button class="icon" id="print" title="Print recipe"></button>
-							<button class="icon" id="add" title="Add recipe to your collection"></button>
-							<button class="icon" id="share" title="Share recipe"></button>
-							<button class="icon" id="delete" title="Delete recipe"></button>
-							<button class="icon" id="edit" title="Edit recipe"></button>
-						</div>
-					</header>
-					${sourceUrl && OriginallyFrom(sourceUrl)}
-					${ingredients && IngredientList(ingredients)}
-					${instructions && Instructions(instructions)}
-				</div>
-			`;
+  #init() {
+    this.innerHTML = jsx`<style>${CSS}</style>${TEMPLATE}`;
+  }
 
-			this.#activateButton("#hide", this.onShowHide);
-			// if there's no ID, it's because this was loaded from a share slug; don't show the action buttons
-			if (id) {
-				this.#activateButton("#edit", this.onEdit);
-				this.#activateButton("#share", this.onShare);
-				this.#activateButton("#delete", this.onDelete);
-			}
-		}
-	}
+  connectedCallback() {
+    // this.#form = this.querySelector("form");
+    // this.#form.addEventListener("input", this.handleFormInput.bind(this));
+    // this.#form.addEventListener("change", this.handleFormChange.bind(this));
+    // this.#form.addEventListener("submit", this.handleFormSubmit.bind(this));
+    // this.#saveBtn = this.querySelector("#save");
+    // this.#saveBtn.addEventListener("click", this.handleSave.bind(this));
+    // this.querySelector("#cancel").addEventListener("click", this.handleCancel.bind(this));
+  }
 
-	connectedCallback() {
-		whenLoaded.then(() => {
-			this.#modal = this.querySelector("dialog");
-			this.#editor = this.querySelector("recipe-editor");
-			this.#article = this.querySelector("article");
-			this.#editor.onCancel = this.onCancelEdit.bind(this);
-			this.#editor.onSave = this.onSaveEdit.bind(this);
-			this.hydrate();
+  set data(armyData) {
+    this.#data = armyData;
+    this.#hydrate();
+  }
 
-			RecipeCollection.addEventListener("change", this.onRecipeChange.bind(this));
-		})
-	}
+  get data() {
+    return { ...this.#data };
+  }
 
-	/**
-	 * All the action buttons are hidden & inactive by default; hydrate() calls this function
-	 * with the ones that should be active based on its input
-	 * @param {String} buttonId 
-	 */
-	#activateButton = (buttonId, handler) => {
-		const btn = this.querySelector(buttonId);
-		if (btn) {
-			btn.classList.add("active");
-			btn.addEventListener("click", handler);
-		}
-	}
+  #hydrate() {
+    if (!this.#data) return;
+    const armyNameHeader = this.querySelector("#armyName");
+    const factionImg = this.querySelector("#faction");
+    const unitList = this.querySelector(".unit-list");
+    const btnAddUnit = this.querySelector("#btnAddUnit");
+    const armyModal = this.querySelector("#army-modal");
+    const armyEditor = armyModal.querySelector("roster-editor");
+    const unitModal = this.querySelector("#unit-modal");
+    const unitCard = this.querySelector("unit-card");
+    const btnClose = this.querySelector("#btnClose");
+    const btnDeleteUnit = this.querySelector("#btnDeleteUnit");
+    const btnSave = this.querySelector("#btnSave");
+    const confirmModal = this.querySelector("confirmation-modal");
+    let activeUnit = null;
 
-	onShowHide = () => {
-		this.querySelector(".recipe-image").classList.toggle("hidden");
-	}
+    const { armyName, faction, units } = this.#data;
 
-	onShare = () => {
-		const slug = getRecipeSlug(this.#recipe);
-		navigator.clipboard.writeText(`${window.location.origin}/r/?s=${slug}`);
-		alert("Sharing URL copied to your clipboard");
-	}
+    armyNameHeader.innerText = armyName;
+    factionImg.src = FACTION_IMAGE_URLS[faction];
+    unitCard.faction = FACTION_NAMES[faction];
 
-	onPrint = () => {
-		window.print();
-	}
+    // units
+    unitList.innerHTML = "";
+    units.forEach((u, idx) => unitList.append(UnitRow(u, idx)));
 
-	onEdit = () => {
-		this.#editor.recipe = this.#recipe;
-		this.#modal.showModal();
-	}
+    armyNameHeader.addEventListener("click", evt => {
+      armyEditor.roster = this.#data;
+      armyModal.showModal();
+    });
 
-	onCancelEdit(hasUnsavedChanges) {
-		const okToClose = hasUnsavedChanges ? confirm("Cancel without saving changes?") : true;
-		if (okToClose) {
-			this.#modal.close();
-		}
-	}
+    armyEditor.addEventListener("cancel", () => {
+      armyModal.close();
+    });
 
-	onSaveEdit() {
-		this.#modal.close();
-	}
+    armyEditor.addEventListener("save", evt => {
+      DataStore.updateRoster({
+        ...this.#data,
+        ...evt.detail,
+        units
+      });
+      armyModal.close();
+    });
 
-	onDelete = () => {
-		if (confirm("Delete this recipe?")) {
-			RecipeCollection.delete(this.#recipe.id).then(success => {
-				if (success) {
-					window.location.assign("/");
-				} else {
-					alert("Could not delete");
-				}
-			});
-		}
-	}
+    unitList.addEventListener("click", evt => {
+      activeUnit = evt.target.closest(".unit-summary");
+      if (activeUnit) {
+        const unitDetails = units[activeUnit.dataset.unitIndex];
+        btnDeleteUnit.disabled = false;
+        unitCard.unit = unitDetails;
+        unitModal.showModal();
+      }
+    });
 
-	onRecipeChange() {
-		RecipeCollection.getRecipeById(this.#recipe.id)
-			.then(recipe => {
-				this.#recipe = recipe;
-				this.hydrate();
-			})
-	}
-}
+    btnAddUnit.addEventListener("click", () => {
+      unitCard.unit = {};
+      btnDeleteUnit.disabled = true;
+      unitModal.showModal();
+    });
+
+    btnClose.addEventListener("click", () => {
+      unitModal.close();
+
+      // TODO
+      // if (evt.detail.hasUnsavedChanges) {
+      //   if (confirm("Discard your updates?")) {
+      //   }
+      // }
+    });
+
+    btnDeleteUnit.addEventListener("click", evt => {
+      confirmModal.showModal("Delete this unit: Are you sure?", ["deleteUnit", activeUnit.dataset.unitIndex]);
+    });
+
+    confirmModal.addEventListener("confirm", evt => {
+      const { context } = evt.detail;
+      if (context[0] === "deleteUnit" && context[1] === activeUnit.dataset.unitIndex) {
+        DataStore.deleteUnitFromRoster(activeUnit.dataset.unitIndex, this.#data.id);
+        unitModal.close();
+      }
+    });
+
+    btnSave.addEventListener("click", () => {
+      unitModal.close();
+
+      if (activeUnit) {
+        // editing existing
+
+        // update saved data in memory & update saved data in DataStore
+        units[activeUnit.dataset.unitIndex] = { ...unitCard.unit };
+        DataStore.updateUnitInRoster(activeUnit.dataset.unitIndex, unitCard.unit, this.#data.id);
+
+      } else {
+        // adding new
+        units.push({ ...unitCard.unit });
+        DataStore.addUnitToRoster(unitCard.unit, this.#data.id);
+      }
+
+    });
+  };
+};
 
 window.customElements.define('roster-view', RosterView);

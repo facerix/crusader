@@ -112,20 +112,12 @@ class RosterEditor extends HTMLElement {
   #form = null;
   #saveBtn = null;
 
-  // whenLoaded = Promise.all(
-  // 	[
-  // 		customElements.whenDefined("editable-list"),
-  // 		// customElements.whenDefined("ingredient-editor"),		// for future development
-  // 	],
-  // );
-
   constructor() {
     super();
     this.#init();
   }
 
   #init() {
-    // this.whenLoaded.then(() => {
     const title = this.getAttribute("title") ?? "Add Roster";
     this.innerHTML = jsx`
 			<style>${CSS}</style>
@@ -136,11 +128,9 @@ class RosterEditor extends HTMLElement {
 				<button id="save" type="submit" disabled>Save Roster</button>
 			</footer>
 		`;
-    // });
   }
 
   connectedCallback() {
-    // this.whenLoaded.then(() => {
     this.#form = this.querySelector("form");
     this.#form.addEventListener("input", this.handleFormInput.bind(this));
     this.#form.addEventListener("change", this.handleFormChange.bind(this));
@@ -148,7 +138,6 @@ class RosterEditor extends HTMLElement {
     this.#saveBtn = this.querySelector("#save");
     this.#saveBtn.addEventListener("click", this.handleSave.bind(this));
     this.querySelector("#cancel").addEventListener("click", this.handleCancel.bind(this));
-    // });
   }
 
   #emit(eventType, detail) {

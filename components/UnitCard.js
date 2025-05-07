@@ -1,8 +1,16 @@
+import { h } from "../src/domUtils.js";
+import { MUNITORIUM } from "../src/munitorium.js";
+
 const CSS = `
-unit-card {
+unit-card form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+/* <select> doesn't have a native readOnly so we do this instead of disabling it */
+.u-readonly {
+  pointer-events: none;
 }
 
 .unit-xp {
@@ -201,12 +209,17 @@ const TEMPLATE = `
     </div>
     <div class="u-flex gap-2 items-center bg-black">
       <div class="u-flex--20 row-header p-l-2">UNIT TYPE</div>
-      <input name="unitType" type="text" class="u-flex--stretch p-1 h-10 text-lg" readonly>
+      <select name="unitType" class="u-flex--stretch p-1 h-10 text-lg" required>
+        <option value="" hidden default selected>Enter unit type</option>
+      </select>
     </div>
   </div>
   <div class="u-flex u-flex--column u-flex--11">
     <div class="row-header p-1 text-xs text-center">No. of Models</div>
-    <input name="modelCount" type="number" class="u-flex--stretch p-1 text-center text-xl" readonly>
+    <!--input name="modelCount" type="number" class="u-flex--stretch p-1 text-center text-xl"-->
+    <select name="modelCount" class="u-flex--stretch p-1 text-center text-xl">
+      <option value="1">1</option>
+    </select>
   </div>
   <div class="u-flex u-flex--column u-flex--11">
     <div class="row-header p-1 text-xs text-center">Points Cost</div>
@@ -291,7 +304,7 @@ const TEMPLATE = `
     <input name="battlesPlayed" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
   </div>
   <div class="u-flex u-flex--column u-flex--11">
-    <div class="row-header p-1 text-xs text-center">Battles Survived</div>
+    <div class="row-header p-1 text-xs text-center">Battles<br/>Survived</div>
     <input name="battlesSurvived" type="number" class="u-flex--stretch p-1 text-center text-xl" placeholder="0">
   </div>
   <div class="u-flex u-flex--column u-flex--11">
@@ -337,9 +350,62 @@ const TEMPLATE = `
 class UnitCard extends HTMLElement {
 	#data = null;
   #form = null;
+  #faction = null;
+  #possibleUnits = null;
+  #possibleUnitSizes = {};
+  #possibleEnhancements = null;
 
   #init() {
     this.#form = this.querySelector("form");
+    this.querySelector("select[name=unitType]").addEventListener("change", this.#onTypeChange.bind(this));
+    this.querySelector("[name=modelCount]").addEventListener("change", this.#onCountChange.bind(this));
+  }
+
+  #onTypeChange(evt) {
+    const countSelect = this.querySelector("[name=modelCount]");
+    const costInput = this.querySelector("[name=pointsCost]");
+    const countAndPoints = this.#possibleUnits[evt.target.value];
+    countSelect.innerHTML = "";
+
+    // model count is 1 unless countAndPoints says otherwise
+    if (typeof countAndPoints === "number") {
+      this.#possibleUnitSizes = 1;
+      countSelect.append(h("option", { value: 1, innerText: "1" }));
+      costInput.value = countAndPoints;
+    } else {
+      this.#possibleUnitSizes = countAndPoints;
+      const firstCountKey = Object.keys(countAndPoints)[0];
+
+      for (let countKey in countAndPoints) {
+        let value = parseInt(countKey, 10);
+        countSelect.append(h("option", { value, innerText: value }));
+      }
+      countSelect.value = parseInt(firstCountKey);
+      costInput.value = countAndPoints[firstCountKey];
+    }
+  }
+
+  #onCountChange(evt) {
+    const selectedCount = evt.target.value;
+    const selectedCountCost = this.#possibleUnitSizes[`${selectedCount}x`] ?? 0;
+    this.querySelector("[name=pointsCost]").value = selectedCountCost;
+  }
+
+  set faction(name) {
+    if (this.#faction !== name && MUNITORIUM[name]) {
+      this.#possibleUnits = MUNITORIUM[name].models;
+      this.#possibleEnhancements = MUNITORIUM[name].enhancements;
+
+      // populate unit type picker
+      const unitType = this.querySelector("select[name=unitType]");
+
+      Object.keys(this.#possibleUnits).forEach(unitName => {
+        unitType.append(h("option", { innerText: unitName, value: unitName }));
+      });
+    } else {
+      this.#possibleUnits = null;
+      this.#possibleEnhancements = null;
+    }
   }
 
 	set unit(data) {
@@ -366,11 +432,13 @@ class UnitCard extends HTMLElement {
     }
 		if (this.#data) {
       const { name, alias, points, crusadePoints, wargear, enhancements, modelCount, xp } = this.#data;
+      const unitType = this.querySelector("[name=unitType]");
+      unitType.value = name ?? "";
+      unitType.classList[!!name ? 'add' : 'remove']('u-readonly')
 
       this.querySelector("[name=unitName]").value = alias ?? "";
-      this.querySelector("[name=unitType]").value = name;
       this.querySelector("[name=modelCount]").value = modelCount ?? "1";
-      this.querySelector("[name=pointsCost]").value = points;
+      this.querySelector("[name=pointsCost]").value = points ?? "50";
       this.querySelector("[name=crusadePoints]").value = crusadePoints ?? "";
       this.querySelector("[name=wargear]").value = wargear ?? "";
       this.querySelector("[name=enhancements]").value = enhancements ?? "";
@@ -404,7 +472,7 @@ class UnitCard extends HTMLElement {
 	}
 
 	connectedCallback() {
-		this.innerHTML = `<style>${CSS}</style><form>${TEMPLATE}</form>`;
+		this.innerHTML = `<style>${CSS}</style><form autocomplete="off">${TEMPLATE}</form>`;
     this.hydrate();
 	}
 }

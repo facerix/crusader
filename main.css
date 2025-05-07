@@ -102,14 +102,21 @@ main {
   background: transparent;
   cursor: pointer;
   font-variant: common-ligatures small-caps;
-
+  
   img {
     height: 2em;
     width: 2em;
   }
 
-  &:hover,
-  &:focus-visible {
+  &:disabled {
+    cursor: not-allowed;
+    img {
+      opacity: 0.5;
+    }
+  }
+
+  &:not(:disabled):hover,
+  &:not(:disabled):focus-visible {
     outline: #7c0028 auto 1px;
     background-color: #ddbfc67a;
   }
@@ -154,6 +161,10 @@ site-header:not(:defined) {
   height: 4em;
   background-color: white;
   border-bottom: 2px inset;
+
+  * {
+    display: none;
+  }
 }
 
 /* view transitions */

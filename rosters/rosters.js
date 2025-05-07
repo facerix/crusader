@@ -3,7 +3,6 @@ import '../components/RosterEditor.js';
 import DataStore from '../src/DataStore.js';
 import { h, queryParams } from '../src/domUtils.js';
 import { parseArmyList } from '../src/parser.js';
-import { v4WithTimestamp } from '../src/uuid.js';
 import { FACTION_IMAGE_URLS, FACTION_NAMES } from '../src/factions.js';
 
 const newRosterCard = (rosterData) => {
@@ -15,7 +14,7 @@ const newRosterCard = (rosterData) => {
       h("img", { src: factionUrl, alt: `Faction image for ${rosterData.faction}`}),
       h("h3", { innerText: rosterData.armyName }),
       h("h4", { innerText: FACTION_NAMES[rosterData.faction] ?? '(Unknown faction)' }),
-      h("h5", { innerText: `${unitCount} unit${unitCount !== 1 && 's'}` })
+      h("h5", { innerText: `${unitCount} unit${unitCount === 1 ? '' : 's'}` })
     ])
   ]);
   return card;
@@ -79,10 +78,7 @@ whenLoaded.then(() => {
   });
 
   editor.addEventListener("save", evt => {
-    DataStore.addRoster({
-      id: v4WithTimestamp(),
-      ...evt.detail
-    });
+    DataStore.addRoster(evt.detail);
     editModal.close();
   });
 

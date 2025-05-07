@@ -1,0 +1,65 @@
+Elves on Jetbikes (955 Points)
+
+Aeldari
+Windrider Host
+Incursion (1000 Points)
+
+CHARACTERS
+
+Autarch Wayleaper (80 Points)
+  • 1x Shuriken pistol
+  • 1x Star glaive
+
+Baharroth (115 Points)
+  • Warlord
+  • 1x Fury of the Tempest
+  • 1x Shining Blade
+
+Farseer Skyrunner (80 Points)
+  • 1x Eldritch Storm
+  • 1x Shuriken pistol
+  • 1x Twin shuriken catapult
+  • 1x Witchblade
+
+BATTLELINE
+
+Windriders (80 Points)
+  • 3x Windrider
+     ◦ 3x Close combat weapon
+     ◦ 3x Twin shuriken catapult
+
+Windriders (80 Points)
+  • 3x Windrider
+     ◦ 3x Close combat weapon
+     ◦ 3x Twin shuriken catapult
+
+OTHER DATASHEETS
+
+Shining Spears (240 Points)
+  • 1x Shining Spear Exarch
+     ◦ 1x Laser lance
+     ◦ 1x Twin shuriken catapult
+  • 5x Shining Spear
+     ◦ 5x Laser lance
+     ◦ 5x Twin shuriken catapult
+
+Swooping Hawks (170 Points)
+  • 1x Swooping Hawk Exarch
+     ◦ 1x Close combat weapon
+     ◦ 1x Hawk’s talon
+  • 9x Swooping Hawk
+     ◦ 9x Close combat weapon
+     ◦ 9x Lasblaster
+
+Vypers (65 Points)
+  • 1x Shuriken cannon
+  • 1x Twin shuriken catapult
+  • 1x Wraithbone hull
+
+Warlock Skyrunners (45 Points)
+  • 1x Destructor
+  • 1x Shuriken pistol
+  • 1x Twin shuriken catapult
+  • 1x Witchblade
+
+Exported with App Version: v1.32.1 (2), Data Version: v599

@@ -1,4 +1,4 @@
-import { FACTION_NAMES_TO_CODES } from "./factions.js";
+import { FACTION_NAMES_TO_CODES, FACTION_NAMES } from "./factions.js";
 
 const nameAndPointsRE = /^([^(]+)\(([0-9]+).*\)$/im;
 
@@ -67,3 +67,22 @@ export const parseArmyList = (exported) => {
     units: [...unitDefs.characters, ...unitDefs.battleline, ...unitDefs.transports, ...unitDefs.otherUnits]
   };
 };
+
+export const exportArmyList = (armyData) => {
+  const lines = [];
+  const { armyName, points, faction, detachment, units } = armyData;
+  const actualPoints = points || units.reduce(
+    (acc, curr) => acc + parseInt(curr.points, 10),
+    0,
+  );
+
+  // armyName: armyNameAndPoints[1].trim(),
+  // points: armyNameAndPoints[2].trim(),
+  // faction: FACTION_NAMES_TO_CODES[lines[2].trim()],
+  // detachment: lines[3].trim(),  // might be lines[4] --- my two exported files have it differently
+  // units: [...unitDefs.characters, ...unitDefs.battleline, ...unitDefs.transports, ...unitDefs.otherUnits]
+  lines.push(`${armyName} (${actualPoints} Points)\n`);
+  lines.push(`${FACTION_NAMES[faction]}\n${detachment}\n\n`);
+
+  return lines.join("\n");
+}

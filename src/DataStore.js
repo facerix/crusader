@@ -75,11 +75,7 @@ class DataStore extends EventTarget {
   }
 
   #removeStorageForRoster(id) {
-    const units = this.#unitsById.get(id);
-    units?.forEach(u => {
-      console.log(u);
-    });
-    // window.localStorage.removeItem(`units:${id}`);
+    window.localStorage.removeItem(`units:${id}`);
   }
 
   #emitChangeEvent(changeType, affectedRecords) {
@@ -145,6 +141,44 @@ class DataStore extends EventTarget {
       this.#unitsById.delete(id);
       this.#reindex();
       this.#emitChangeEvent("delete", [id]);
+    }
+  }
+
+  addUnitToRoster(unit, rosterId) {
+    const r = this.#rostersById.get(rosterId);
+    if (r) {
+      const unitsJson = window.localStorage.getItem(`units:${r.id}`) ?? '[]';
+      r.units = [...JSON.parse(unitsJson), unit];
+      r.unitCount = r.units.length;
+      this.updateRoster(r);
+
+    } else {
+      throw new Error(`Unit '${rosterId}' not found`);
+    }
+  }
+
+  // TODO (maybe): swap unit index for uuids
+  updateUnitInRoster(unitIndex, unit, rosterId) {
+    const r = this.#rostersById.get(rosterId);
+    if (r) {
+      r.units[unitIndex] = unit;
+      this.updateRoster(r);
+
+    } else {
+      throw new Error(`Unit '${rosterId}' not found`);
+    }
+  }
+
+  // TODO (maybe): swap unit index for uuids
+  deleteUnitFromRoster(unitIndex, rosterId) {
+    const r = this.#rostersById.get(rosterId);
+    if (r) {
+      r.units.splice(unitIndex, 1);
+      r.unitCount = r.units.length;
+      this.updateRoster(r);
+
+    } else {
+      throw new Error(`Unit '${rosterId}' not found`);
     }
   }
 }

@@ -29,15 +29,7 @@
       /* gap: 1.5em; */
 
       header {
-        /* height: 100px !important; */
-
-        h2 {
-          /* font-size: 48px; */
-          /* margin: 0 1em; */
-          /* text-align: center; */
-        }
-
-        img {
+        &> img {
           margin-left: 1em;
           margin-right: auto;
 
@@ -175,6 +167,7 @@
         padding-top: 0.5rem;
         display: flex;
         justify-content: end;
+        gap: 1rem;
 
         button {
           font-weight: bold;
@@ -187,58 +180,17 @@
 <body class="fill-height">
   <site-header title="Order of Battle">
     <button>
+      <img id="btnExport" src="/images/cloud-download.svg" alt="export roster" />
+    </button>
+    <button>
       <img id="btnDelete" src="/images/delete.svg" alt="delete roster" />
     </button>
   </site-header>
   <main>
-    <roster-view>
-      <header>
-        <div>
-          <h2 id="armyName">Loading...</h2>
-          <!-- <input /> -->
-        </div>
-        <img src="/images/loader.svg" id="faction" alt="army faction logo" />
-        <div class="bubble" id="battles" data-caption="Battles">-</div>
-        <div class="bubble" id="victories" data-caption="Victories">-</div>
-        <div class="bubble" id="requisitionPoints" data-caption="Req&nbsp;pts">-</div>
-      </header>
-  
-      <hr />
-  
-      <div class="u-flex units-header">
-        <span class="unit-name">Unit Name</span>
-        <span class="unit-pts">Points<br/>Value</span>
-        <span class="unit-pts">Crusade<br/>Points</span>
-      </div>
-      <div class="unit-list"></div>
-      <div class="u-flex unit-actions">
-        <button id="btnAddUnit">
-          <img src="/images/add-row.svg" alt="plus icon" />
-          Add a unit
-        </button>
-      </div>
-    </roster-view>
+    <roster-view></roster-view>
   </main>
 
   <confirmation-modal></confirmation-modal>
-
-  <dialog id="unit-modal" closedby="any">
-    <header>
-      <h3>Unit Card</h3>
-      <button>
-        <!-- <img id="btnDelete" src="/images/delete.svg" alt="delete unit" /> -->
-        <img id="btnClose" src="/images/close.svg" alt="close modal" tabindex="50" />
-      </button>
-    </header>
-    <unit-card></unit-card>
-    <footer>
-      <button id="btnSave">
-        <img src="/images/card-details.svg" alt="card" />
-        Save Card
-      </button>
-    </footer>
-    <!-- <unit-editor></unit-editor> -->
-  </dialog>
 </body>
 <script src="roster.js" type="module" blocking="render"></script>
 

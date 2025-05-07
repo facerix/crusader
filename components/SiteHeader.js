@@ -28,7 +28,8 @@ const CSS = `
 
 		a.home,
 		& > nav {
-			width: 64px;
+			display: flex;
+			gap: 0.25rem;
 		}
       
 		h1 {
