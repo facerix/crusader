@@ -107,10 +107,10 @@ export const MUNITORIUM = {
       },
       "Aleya": 65,
       "Allarus Custodians": {
-          "2x": 130,
-          "3x": 195,
-          "5x": 325,
-          "6x": 390
+        "2x": 130,
+        "3x": 195,
+        "5x": 325,
+        "6x": 390
       },
       "Anathema Psykana Rhino": 75,
       "Aquilon Custodians": {
@@ -155,24 +155,24 @@ export const MUNITORIUM = {
       "Venerable Contemptor Dreadnought": 170,
       "Venerable Land Raider": 240,
       "Venatari Custodians": {
-          "3x": 165,
-          "6x": 330
+        "3x": 165,
+        "6x": 330
       },
       "Vertus Praetors": {
-          "2x": 150,
-          "3x": 225
+        "2x": 150,
+        "3x": 225
       },
       "Vigilators": {
-          "4x": 50,
-          "5x": 65,
-          "9x": 115,
-          "10x": 125
+        "4x": 50,
+        "5x": 65,
+        "9x": 115,
+        "10x": 125
       },
       "Witchseekers": {
-          "4x": 50,
-          "5x": 65,
-          "9x": 115,
-          "10x": 125
+        "4x": 50,
+        "5x": 65,
+        "9x": 115,
+        "10x": 125
       }
     },
     "enhancements": {
@@ -183,34 +183,34 @@ export const MUNITORIUM = {
         "Veiled Blade": 25
       },
       "Lions of the Emperor": {
-          "Admonimortis": 10,
-          "Fierce Conqueror": 15,
-          "Praesidius": 25,
-          "Superior Creation": 25
+        "Admonimortis": 10,
+        "Fierce Conqueror": 15,
+        "Praesidius": 25,
+        "Superior Creation": 25
       },
       "Null Maiden Vigil": {
-          "Enhanced Voidsheen Cloak": 10,
-          "Huntress’ Eye": 15,
-          "Oblivion Knigh": 25,
-          "Raptor Blade": 5
+        "Enhanced Voidsheen Cloak": 10,
+        "Huntress’ Eye": 15,
+        "Oblivion Knigh": 25,
+        "Raptor Blade": 5
       },
       "Shield Host": {
-          "Auric Mantle": 15,
-          "Castellan’s Mark": 20,
-          "From the Hall of Armouries": 25,
-          "Panoptispex": 5
+        "Auric Mantle": 15,
+        "Castellan’s Mark": 20,
+        "From the Hall of Armouries": 25,
+        "Panoptispex": 5
       },
       "Solar Spearhead": {
-          "Adamantine Talisman": 25,
-          "Augury Uplink": 35,
-          "Honoured Fallen": 15,
-          "Veteran of the Kataphraktoi": 10
+        "Adamantine Talisman": 25,
+        "Augury Uplink": 35,
+        "Honoured Fallen": 15,
+        "Veteran of the Kataphraktoi": 10
       },
       "Talons of the Emperor": {
-          "Aegis Projector": 20,
-          "Champion of the Imperium": 25,
-          "Gift of Terran Artifice": 15,
-          "Radiant Mantle": 30
+        "Aegis Projector": 20,
+        "Champion of the Imperium": 25,
+        "Gift of Terran Artifice": 15,
+        "Radiant Mantle": 30
       }
     }
   },
@@ -557,7 +557,7 @@ export const MUNITORIUM = {
         "3x": 80,
         "6x": 160
       },
-      "Cthonian Berserks": {
+      "Cthonian Beserks": {
         "5x": 100,
         "10x": 200
       },
@@ -833,8 +833,162 @@ export const MUNITORIUM = {
     "enhancements": {},
   },
   "Tyranids": {
-    "models": {},
-    "enhancements": {},
+    "models": {
+      "Barbgaunts": {
+        "5x": 55,
+        "10x": 110,
+      },
+      "Biovores": {
+        "1x": 50,
+        "2x": 100,
+        "3x": 150
+      },
+      "Broodlord": 80,
+      "Carnifexes": {
+        "1x": 115,
+        "2x": 230
+      },
+      "Deathleaper": 80,
+      "Exocrine": 140,
+      "Gargoyles": {
+        "10x": 85,
+        "20x": 170,
+      },
+      "Genestealers": {
+        "5x": 75,
+        "10x": 150,
+      },
+      "Harpy": 215,
+      "Haruspex": 125,
+      "Hive Crone": 200,
+      "Hive Guard": {
+        "3x": 100,
+        "6x": 200
+      },
+      "Hive Tyrant": 225,
+      "Hormagaunts": {
+        "10x": 65,
+        "20x": 130,
+      },
+      "Lictor": 60,
+      "Maleceptor": 170,
+      "Mawloc": 145,
+      "Mucolid Spores": {
+        "1x": 30,
+        "2x": 60
+      },
+      "Neurogaunts": {
+        "11x": 45,
+        "22x": 90,
+      },
+      "Neurolictor": 80,
+      "Neurotyrant": 105,
+      "Norn Assimilator": 275,
+      "Norn Emissary": 260,
+      "Old One Eye": 150,
+      "Parasite of Mortrex": 80,
+      "Psychophage": 95,
+      "Pyrovores": {
+        "1x": 40,
+        "2x": 70,
+        "3x": 105
+      },
+      "Raveners": {
+        "3x": 75,
+        "6x": 150,
+      },
+      "Ripper Swarms": {
+        "1x": 25,
+        "2x": 40,
+        "3x": 50
+      },
+      "Screamer-Killer": 145,
+      "Spore Mines": {
+        "3x": 55,
+        "6x": 110
+      },
+      "Sporocyst": 145,
+      "Termagants": {
+        "10x": 60,
+        "20x": 120,
+      },
+      "Tervigon": 175,
+      "The Swarmlord": 240,
+      "Toxicrene": 150,
+      "Trygon": 140,
+      "Tyranid Warriors with Melee Bio-weapons": {
+        "3x": 75,
+        "6x": 150,
+      },
+      "Tyranid Warriors with Ranged Bio-weapons": {
+        "3x": 65,
+        "6x": 130,
+      },
+      "Tyrannocyte": 105,
+      "Tyrannofex": 200,
+      "Tyrant Guard": {
+        "3x": 80,
+        "6x": 160,
+      },
+      "Venomthropes": {
+        "3x": 70,
+        "6x": 140
+      },
+      "Von Ryan’s Leapers": {
+        "3x": 70,
+        "6x": 140,
+      },
+      "Winged Hive Tyrant": 200,
+      "Winged Tyranid Prime": 65,
+      "Zoanthropes": {
+        "3x": 100,
+        "6x": 200,
+      }
+    },
+    "enhancements": {
+      "Assimilation Swarm": {
+        "Biophagic Flow": 10,
+        "Instinctive Defence": 15,
+        "Parasitic Biomorphology": 25,
+        "Regenerating Monstrosity": 20,
+      },
+      "Crusher Stampede": {
+        "Enraged Reserves": 20,
+        "Monstrous Nemesis": 25,
+        "Null Nodules": 10,
+        "Ominous Presence": 15,
+      },
+      "Invasion Fleet": {
+        "Adaptive Biology": 25,
+        "Alien Cunning": 30,
+        "Perfectly Adapted": 15,
+        "Synaptic Linchpin": 20,
+      },
+      "Synaptic Nexus": {
+        "Power of the Hive Mind": 10,
+        "Psychostatic Disruption": 30,
+        "Synaptic Control": 20,
+        "The Dirgeheart of Kharis": 15,
+      },
+      "Unending Swarm": {
+        "Adrenalised Onslaught": 15,
+        "Naturalised Camouflage": 30,
+        "Piercing Talons": 25,
+        "Relentless Hunger": 20,
+      },
+      "Vanguard Onslaught": {
+        "Chameleonic": 15,
+        "Hunting Grounds": 20,
+        "Neuronode": 20,
+        "Stalker": 10,
+      },
+      "Warrior Bioform Onslaught": {
+        "Elevated Might": 30,
+        "Ocular Adaptation": 20,
+        "Sensory Assimilation": 20,
+        "Synaptic Tyrant": 10,
+      },
+    },
   },
   "Ultramarines": {
     "models": {},

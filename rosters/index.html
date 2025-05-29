@@ -20,11 +20,12 @@
 
   <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
   <link rel="manifest" href="/manifest.json" />
+  <link rel="modulepreload" href="rosters.js" />
 
   <style>
     main {
+      --card-height: 300px;
       align-items: center;
-      /* justify-content: center; */
       gap: 1.5em;
 
       h2 {
@@ -37,7 +38,8 @@
       }
 
       .roster-flow {
-        justify-content: space-between;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
         gap: 25px;
 
         roster-card {
@@ -49,7 +51,7 @@
           align-items: center;
           text-align: center;
 
-          height: 50vh;
+          height: var(--card-height);
           width: 200px;
 
           a {
@@ -80,7 +82,7 @@
       }
 
       #btnNew {
-        height: 50vh;
+        height: var(--card-height);
         width: 200px;
         display: flex;
         flex-direction: column;
@@ -103,10 +105,8 @@
 </head>
 
 <body class="fill-height">
-  <site-header></site-header>
+  <site-header title="Crusade Forces"></site-header>
   <main>
-    <h2>Rosters</h2>
-
     <div class="u-flex actions">
       <button id="btnClipboard" title="Paste text exported from BattleForge">
         <img src="/images/clipboard-list.svg" alt="clipboard" />

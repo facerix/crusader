@@ -14,42 +14,39 @@ const whenLoaded = Promise.all(
   ],
 );
 
-
 whenLoaded.then(() => {
   const btnDelete = document.querySelector("#btnDelete");
   const btnExport = document.querySelector("#btnExport");
   const confirmModal = document.querySelector("confirmation-modal");
   const rosterView = document.querySelector("roster-view");
-  
+
   const urlParams = new URL(window.location).searchParams;
-	const id = urlParams.get('id');
-  DataStore.init();
+  const id = urlParams.get('id');
 
-  DataStore.addEventListener("change", evt => {
-    const { detail } = evt;
-    switch (detail.changeType) {
-      case "init":
-        if (id) {
-          const army = DataStore.getRosterById(id);
-          rosterView.data = army;
+  DataStore.addEventListener("init", () => {
+    if (id) {
+      DataStore.getRosterById(id)
+        .then(army => rosterView.data = army)
+        .catch(err => {
+          alert("Couldn't find a roster with this ID");
+        });
+  
+    } else {
+      // TODO
+    }
+  });
 
-        } else {
-          // TODO
-        }
-        break;
-      case "update":
-        if (detail.affectedRecords.id === id) {
-          rosterView.data = detail.affectedRecords;
-        }
-        break;
-      case "delete":
-        if (detail.affectedRecords[0] === id) {
-          window.location = `/rosters/`;
-        }
-        break;
-      default:
-        // no action to take otherwise
-        break;
+  DataStore.addEventListener("update", evt => {
+    const { detail: { recordType, affectedRecords} } = evt;
+    if (recordType === "roster" && affectedRecords.id === id) {
+      rosterView.data = affectedRecords;
+    }
+  });
+
+  DataStore.addEventListener("delete", evt => {
+    const { detail: { recordType, affectedRecords} } = evt;
+    if (recordType === "roster" && affectedRecords.id === id) {
+      window.location = `/rosters/`;
     }
   });
 

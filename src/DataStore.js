@@ -6,7 +6,7 @@ const normalize = (obj) => {
   if (Array.isArray(obj)) {
     return obj.map(normalize);
   }
-  
+
   if (!obj.id) {
     obj.id = v4WithTimestamp();
   }
@@ -14,10 +14,9 @@ const normalize = (obj) => {
   for (let k of Object.keys(obj)) {
     switch (typeof obj[k]) {
       case "object":
-        obj[k] = Array.isArray(obj[k]) ? obj[k].map(normalize) : normalize(obj[k])
+        obj[k] = Array.isArray(obj[k]) ? obj[k].map(normalize) : normalize(obj[k]);
         break;
       default:
-        // console.log(k, obj[k], typeof obj[k]);
         break;
     }
   }
@@ -25,160 +24,317 @@ const normalize = (obj) => {
 };
 
 let instance;
+
 class DataStore extends EventTarget {
   #rosters = [];
   #rostersById = new Map(); // map from uuid to index in the #rosters array
   #unitsById = new Map(); // map from uuid to array of unit objects for that unit
+  #battles = [];
+  #db = null;
 
   constructor() {
     if (instance) {
       throw new Error("New instance cannot be created!!");
     }
     super();
-
     instance = this;
+    this.#initDB();
   }
 
-  #loadRecordsFromJson(json) {
-    const records = JSON.parse(json);
-    records.forEach((item, index) => {
-      // normalize (add expected fields for records that don't already have them)
-      if (!item.id) {
-        records[index].id = v4WithTimestamp();
-      }
-    });
-    return records;
+  // Initialize IndexedDB
+  async #initDB() {
+    const request = indexedDB.open("CrusaderDB", 1);
+
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      const rosterStore = db.createObjectStore("rosters", { keyPath: "id" });
+      const unitsStore = db.createObjectStore("units", { keyPath: "id" });
+      const battlesStore = db.createObjectStore("battles", { keyPath: "id" });
+      // Create an index on rosterId in the units object store
+      unitsStore.createIndex("rosterId", "rosterId", { unique: false });
+    };
+
+    request.onsuccess = (event) => {
+      this.#db = event.target.result;
+      this.loadRosters();
+    };
+
+    request.onerror = (event) => {
+      console.error("Database error: " + event.target.errorCode);
+    };
   }
 
-  // if we eventually allow other storage besides local (i.e. DB, cloud, etc), this will need to be more robust;
-  // for now, just load the records from localStorage or set it up if not yet set
-  async init() {
-    let savedRostersJson = window.localStorage.getItem("rosters");
-    if (!savedRostersJson) {
-      savedRostersJson = "[]";
-      window.localStorage.setItem("rosters", savedRostersJson);
-    }
-    this.#rosters = normalize(this.#loadRecordsFromJson(savedRostersJson));
-    this.#reindex();
-
-    setTimeout(() => {
-      this.#emitChangeEvent("init", ["*"]);
-    }, 0);
-  }
-
-  #saveData() {
-    window.localStorage.setItem("rosters", JSON.stringify(this.#rosters));
-
-    for (let [id, units] of this.#unitsById.entries()) {
-      window.localStorage.setItem(`units:${id}`, JSON.stringify(units));
-    }
-  }
-
-  #removeStorageForRoster(id) {
-    window.localStorage.removeItem(`units:${id}`);
-  }
-
-  #emitChangeEvent(changeType, affectedRecords) {
-    const changeEvent = new CustomEvent("change", {
+  #emit(eventName, recordType, affectedRecords) {
+    const changeEvent = new CustomEvent(eventName, {
       detail: {
-        rosters: this.#rosters,
-        changeType,
-        affectedRecords
+        recordType,
+        affectedRecords,
       },
     });
     this.dispatchEvent(changeEvent);
   }
 
-  #reindex() {
+  async loadRosters() {
+    const transaction = this.#db.transaction("rosters", "readonly");
+    const store = transaction.objectStore("rosters");
+    const request = store.getAll();
+
+    request.onsuccess = (event) => {
+      this.#rosters = event.target.result;
+      this.#index();
+      this.#emit("init", "all", ["*"]);
+    };
+  }
+
+  async #saveRoster(record) {
+    const transaction = this.#db.transaction(["rosters", "units"], "readwrite");
+
+    const rosterStore = transaction.objectStore("rosters");
+    const unitsStore = transaction.objectStore("units");
+
+    const recToSave = {
+      id: record.id ?? v4WithTimestamp(),
+      unitCount: record?.units?.length ?? 0,
+      ...record,
+    };
+    delete recToSave.units;
+    this.#unitsById.set(record.id, record.units);
+    if (record.id) {
+      // updating existing
+      this.#rosters.forEach((rec, idx) => {
+        if (rec.id === record.id) {
+          this.#rosters[idx] = record;
+        }
+      });
+    } else {
+      this.#rosters.push(recToSave);
+    }
+    this.#rostersById.set(record.id, record);
+
+    // Store the roster data, less the units
+    await rosterStore.put(recToSave);
+
+    // Store each unit in the units object store
+    const unitPromises = record.units.map(unit => {
+      const unitData = {
+        id: unit.id || v4WithTimestamp(), // Ensure each unit has an id
+        ...unit,
+        rosterId: recToSave.id, // Link unit to the roster
+      };
+      return unitsStore.put(unitData);
+    });
+    await Promise.all(unitPromises);
+
+    // Handle transaction completion
+    transaction.oncomplete = () => {
+      const eventType = record.id ? "update" : "add";
+      this.#emit(eventType, "roster", {
+        ...recToSave,
+        units: record.units,
+      });
+      console.log("Record and units saved successfully");
+    };
+
+    transaction.onerror = (event) => {
+      console.error("Transaction failed: ", event.target.error);
+    };
+  }
+
+  async #saveUnit(unit, rosterId) {
+    return new Promise((resolve, reject) => {
+      const transaction = this.#db.transaction(["units"], "readwrite");
+      const unitsStore = transaction.objectStore("units");
+
+      const unitData = {
+        id: unit.id || v4WithTimestamp(), // Ensure each unit has an id
+        rosterId,
+        ...unit,
+      };
+      unitsStore.put(unitData);
+
+      // Handle transaction completion
+      transaction.oncomplete = () => {
+        resolve(unit);
+      };
+
+      transaction.onerror = (event) => {
+        reject("Transaction failed: ", event.target.error);
+      };
+    });
+  }
+
+  async #deleteUnit(unitId) {
+    return new Promise((resolve, reject) => {
+      const transaction = this.#db.transaction(["units"], "readwrite");
+      const unitsStore = transaction.objectStore("units");
+
+      unitsStore.delete(unitId);
+
+      // Handle transaction completion
+      transaction.oncomplete = () => {
+        resolve(unitId);
+      };
+
+      transaction.onerror = (event) => {
+        reject("Transaction failed: ", event.target.error);
+      };
+    });
+  }
+
+  async #removeStorageForRoster(id) {
+    return new Promise((resolve, reject) => {
+      const transaction = this.#db.transaction(["rosters", "units"], "readwrite");
+      const recordStore = transaction.objectStore("rosters");
+      const unitsStore = transaction.objectStore("units");
+  
+      // Delete the roster record
+      recordStore.delete(id);
+  
+      // Delete associated units
+      const index = unitsStore.index("rosterId");
+      const unitsRequest = index.getAll(id);
+  
+      unitsRequest.onsuccess = async (event) => {
+        const units = event.target.result;
+        const deletePromises = units.map(unit => unitsStore.delete(unit.id));
+        try {
+          await Promise.all(deletePromises); // Wait for all deletions to complete
+        } catch (error) {
+          reject("Failed to delete one or more units: ", error);
+        }
+      };
+  
+      transaction.oncomplete = () => {
+        resolve();
+      };
+  
+      transaction.onerror = (event) => {
+        reject("Error removing roster and units: ", event.target.error);
+      };
+    });
+  }
+
+  #index() {
     this.#rostersById = new Map();
-    this.#rosters.forEach(roster => {
+    this.#rosters.forEach((roster) => {
       this.#rostersById.set(roster.id, roster);
     });
-    this.#saveData();
   }
 
   get rosters() {
     return this.#rosters;
-  };
-
-  getRosterById(id) {
-    const r = this.#rostersById.get(id);
-    if (r) {
-      const unitsJson = window.localStorage.getItem(`units:${r.id}`) ?? '[]';
-      r.units = JSON.parse(unitsJson);
-      this.#unitsById.set(id, r.units);
-    }
-    return r;
   }
 
-  addRoster(record) {
-    const id = v4WithTimestamp();
-    const recToSave = {
-      id,
-      unitCount: record.units.length,
-      ...record
-    };
-    delete recToSave.units;
-    this.#unitsById.set(id, record.units);
-    this.#rosters.push(recToSave);
-    this.#reindex();
-    this.#emitChangeEvent("add", recToSave);
+  get battles() {
+    return this.#battles;
   }
 
-  updateRoster(record) {
-    const index = this.#rosters.findIndex(rec => rec.id === record.id);
-    if (index > -1) {
-      this.#rosters[index] = record;
-      this.#reindex();
-      this.#emitChangeEvent("update", record);
-    }
+  async getRosterById(id) {
+    return new Promise((resolve, reject) => {
+      const roster = this.#rostersById.get(id);
+      if (roster) {
+        const transaction = this.#db.transaction("units", "readonly");
+        const unitsStore = transaction.objectStore("units");
+        const index = unitsStore.index("rosterId");
+        const request = index.getAll(id);
+
+        request.onsuccess = (event) => {
+          roster.units = event.target.result || [];
+          this.#unitsById.set(id, roster.units);
+          resolve(roster);
+        };
+
+        request.onerror = (event) => {
+          reject("Error retrieving units: " + event.target.error);
+        };
+      } else {
+        reject(`Roster '${id}' not found`);
+      }
+    });
   }
 
-  deleteRoster(id) {
+  async addRoster(rosterData) {
+    await this.#saveRoster(rosterData);
+  }
+
+  async updateRoster(record) {
+    await this.#saveRoster(record);
+  }
+
+  async deleteRoster(id) {
     if (this.#rostersById.has(id)) {
-      this.#removeStorageForRoster(id);
-      this.#rosters = this.#rosters.filter(r => r.id !== id);
-      this.#unitsById.delete(id);
-      this.#reindex();
-      this.#emitChangeEvent("delete", [id]);
+      this.#removeStorageForRoster(id)
+        .then(() => {
+          this.#rosters = this.#rosters.filter((r) => r.id !== id);
+          this.#unitsById.delete(id);
+
+          this.#emit("delete", "roster", { id });
+        }).catch(e => {
+          throw new Error("Failed to delete roster: " + e);
+        });
     }
   }
 
-  addUnitToRoster(unit, rosterId) {
-    const r = this.#rostersById.get(rosterId);
-    if (r) {
-      const unitsJson = window.localStorage.getItem(`units:${r.id}`) ?? '[]';
-      r.units = [...JSON.parse(unitsJson), unit];
-      r.unitCount = r.units.length;
-      this.updateRoster(r);
-
+  async addUnitToRoster(unit, rosterId) {
+    const roster = this.#rostersById.get(rosterId);
+    if (roster) {
+      if (!roster.units) {
+        roster.units = [];
+      }
+      if (!unit.id) {
+        unit.id = v4WithTimestamp();
+      }
+      if (!roster.units.some(u => u.id === unit.id)) {
+        roster.units.push(unit);
+      } else {
+        console.warn("Attempted to add duplicate unit:", unit);
+      }
+      roster.unitCount = roster.units.length;
+      await this.updateRoster(roster);
     } else {
-      throw new Error(`Unit '${rosterId}' not found`);
+      throw new Error(`Roster '${rosterId}' not found`);
     }
   }
 
-  // TODO (maybe): swap unit index for uuids
-  updateUnitInRoster(unitIndex, unit, rosterId) {
-    const r = this.#rostersById.get(rosterId);
-    if (r) {
-      r.units[unitIndex] = unit;
-      this.updateRoster(r);
-
+  async updateUnitInRoster(unitId, unit, rosterId) {
+    const roster = this.#rostersById.get(rosterId);
+    if (roster) {
+      const unitToSave = {
+        ...unit,
+        id: unitId,
+        rosterId
+      };
+      this.#saveUnit(unitToSave, rosterId).then(savedUnit => {
+        roster.units.forEach((u, idx, array) => {
+          if (u.id === unitId) {
+            array[idx] = savedUnit;
+          }
+        });
+        this.#saveRoster(roster);
+      }).catch(err => {
+        throw new Error(err);
+      });
     } else {
-      throw new Error(`Unit '${rosterId}' not found`);
+      throw new Error(`Roster '${rosterId}' not found`);
     }
   }
 
-  // TODO (maybe): swap unit index for uuids
-  deleteUnitFromRoster(unitIndex, rosterId) {
-    const r = this.#rostersById.get(rosterId);
-    if (r) {
-      r.units.splice(unitIndex, 1);
-      r.unitCount = r.units.length;
-      this.updateRoster(r);
-
+  async deleteUnitFromRoster(unitId, rosterId) {
+    const roster = this.#rostersById.get(rosterId);
+    if (roster) {
+      roster.units = roster.units.filter(u => u.id !== unitId);
+      roster.unitCount = roster.units.length;
+      this.#deleteUnit(unitId)
+        .then(() => {
+          // const recToSave = { ...roster };
+          // delete recToSave.units;
+          this.#saveRoster(roster);
+        })
+        .catch(err => {
+          throw new Error(err);
+        });
     } else {
-      throw new Error(`Unit '${rosterId}' not found`);
+      throw new Error(`Roster '${rosterId}' not found`);
     }
   }
 }

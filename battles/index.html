@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Crusader - Battles</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="Progressive web app to keep track of Warhammer 40,000 crusades" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://crusader.facerix.com/battles/" />
+    <meta property="og:title" content="Crusader - Manage Battles" />
+    <meta property="og:description" content="Progressive web app to keep track of Warhammer 40,000 crusades" />
+    <meta property="og:url" content="https://crusader.facerix.com/battles/" />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" href="/sword.svg" type="image/svg" />
+    <link rel="icon" href="/icon512_maskable.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/icon512_rounded.png" sizes="512x512" />
+
+    <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
+    <link rel="manifest" href="/manifest.json" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                    },
+                },
+            },
+            darkMode: 'class',
+        }
+    </script>
+
+    <style>
+      main {
+        align-items: center;
+        /* justify-content: center; */
+        gap: 1.5em;
+
+        .battle-list {
+          flex-direction: column;
+        }
+
+      }
+    </style>
+  </head>
+
+  <body class="fill-height">
+    <site-header title="Battle Reports"></site-header>
+    <main>
+      <div class="u-flex battle-list">
+        <button id="btnNew">
+          <img src="/images/Fast-Attack.svg" alt="create" />
+          <h3>Start new battle</h3>
+        </button>
+      </div>
+      </div>
+    </main>
+
+    <!-- <dialog id="roster-modal">
+      <roster-editor></roster-editor>
+    </dialog> -->
+  </body>
+  <script src="battles.js" type="module"></script>
+</html>

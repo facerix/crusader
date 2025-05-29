@@ -1,0 +1,617 @@
+Lamentors (12265 Points)
+
+Space Marines
+Blood Angels
+Gladius Task Force
+Strike Force (2000 Points)
+
+CHARACTERS
+
+Ancient (50 Points)
+  • 1x Bolt pistol
+  • 1x Bolt rifle
+  • 1x Close combat weapon
+
+Ancient in Terminator Armour (75 Points)
+  • 1x Power fist
+  • 1x Storm bolter
+
+Apothecary (50 Points)
+  • 1x Absolvor bolt pistol
+  • 1x Close combat weapon
+  • 1x Reductor pistol
+
+Apothecary Biologis (70 Points)
+  • 1x Absolvor bolt pistol
+  • 1x Close combat weapon
+
+Astorath (105 Points)
+  • 1x The Executioner’s Axe
+
+Bladeguard Ancient (45 Points)
+  • 1x Close combat weapon
+  • 1x Heavy bolt pistol
+
+Blood Angels Captain (80 Points)
+  • 1x Heavy bolt pistol
+  • 1x Master‐crafted chainsword
+
+Captain (80 Points)
+  • 1x Bolt Pistol
+  • 1x Close combat weapon
+  • 1x Master-crafted bolter
+
+Captain in Gravis Armour (80 Points)
+  • 1x Master-crafted heavy bolt rifle
+  • 1x Master-crafted power weapon
+
+Captain in Phobos Armour (70 Points)
+  • 1x Bolt Pistol
+  • 1x Combat knife
+  • 1x Instigator bolt carbine
+
+Captain in Terminator Armour (95 Points)
+  • 1x Relic weapon
+  • 1x Storm bolter
+
+Captain with Jump Pack (85 Points)
+  • 1x Astartes chainsword
+  • 1x Heavy bolt pistol
+
+Chaplain (60 Points)
+  • 1x Absolvor bolt pistol
+  • 1x Crozius arcanum
+
+Chaplain in Terminator Armour (75 Points)
+  • 1x Crozius arcanum
+  • 1x Storm bolter
+
+Chaplain on Bike (75 Points)
+  • 1x Absolvor bolt pistol
+  • 1x Crozius arcanum
+  • 1x Twin bolt rifle
+
+Chaplain with Jump Pack (75 Points)
+  • 1x Bolt pistol
+  • 1x Crozius arcanum
+
+Chief Librarian Mephiston (135 Points)
+  • 1x Fury of the Ancients
+  • 1x Plasma pistol
+  • 1x Vitarus
+
+Commander Dante (130 Points)
+  • 1x Perdition Pistol
+  • 1x The Axe Mortalis
+
+Death Company Captain (70 Points)
+  • 1x Heavy bolt pistol
+  • 1x Master‐crafted chainsword
+
+Death Company Captain with Jump Pack (75 Points)
+  • 1x Astartes chainsword
+  • 1x Heavy bolt pistol
+
+Judiciar (70 Points)
+  • 1x Absolvor bolt pistol
+  • 1x Executioner relic blade
+
+Lemartes (110 Points)
+  • 1x Absolvor bolt pistol
+  • 1x The Blood Crozius
+
+Librarian (65 Points)
+  • 1x Bolt pistol
+  • 1x Force weapon
+  • 1x Smite
+
+Librarian in Phobos Armour (70 Points)
+  • 1x Bolt pistol
+  • 1x Force weapon
+  • 1x Smite
+
+Librarian in Terminator Armour (75 Points)
+  • 1x Force weapon
+  • 1x Smite
+
+Lieutenant (65 Points)
+  • 1x Bolt Pistol
+  • 1x Close combat weapon
+  • 1x Master-crafted bolter
+
+Lieutenant in Phobos Armour (55 Points)
+  • 1x Bolt Pistol
+  • 1x Master-crafted bolt carbine
+  • 1x Paired combat blades
+
+Lieutenant in Reiver Armour (55 Points)
+  • 1x Combat knife
+  • 1x Master-crafted special issue bolt pistol
+
+Lieutenant with Combi-weapon (70 Points)
+  • 1x Combi-weapon
+  • 1x Paired combat blades
+
+Sanguinary Priest (90 Points)
+  • 1x Absolvor bolt pistol
+  • 1x Astartes chainsword
+
+Techmarine (55 Points)
+  • 1x Forge bolter
+  • 1x Grav-pistol
+  • 1x Omnissian power axe
+  • 1x Servo-arm
+
+The Sanguinor (140 Points)
+  • 1x Encarmine broadsword
+
+BATTLELINE
+
+Assault Intercessor Squad (75 Points)
+  • 1x Assault Intercessor Sergeant
+     ◦ 1x Astartes chainsword
+     ◦ 1x Heavy bolt pistol
+  • 4x Assault Intercessor
+     ◦ 4x Astartes chainsword
+     ◦ 4x Heavy bolt pistol
+
+Heavy Intercessor Squad (110 Points)
+  • 1x Heavy Intercessor Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Close combat weapon
+     ◦ 1x Heavy bolt rifle
+  • 4x Heavy Intercessor
+     ◦ 4x Bolt pistol
+     ◦ 4x Close combat weapon
+     ◦ 4x Heavy bolt rifle
+
+Intercessor Squad (80 Points)
+  • 1x Intercessor Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Bolt rifle
+     ◦ 1x Close combat weapon
+  • 4x Intercessor
+     ◦ 4x Bolt pistol
+     ◦ 4x Bolt rifle
+     ◦ 4x Close combat weapon
+
+Tactical Squad (140 Points)
+  • 1x Tactical Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Boltgun
+     ◦ 1x Close combat weapon
+  • 8x Tactical Marine
+     ◦ 8x Bolt pistol
+     ◦ 8x Boltgun
+     ◦ 8x Close combat weapon
+  • 1x Tactical Marine
+     ◦ 1x Bolt pistol
+     ◦ 1x Boltgun
+     ◦ 1x Close combat weapon
+
+DEDICATED TRANSPORTS
+
+Impulsor (80 Points)
+  • 1x Armoured hull
+  • 2x Storm bolter
+
+Razorback (95 Points)
+  • 1x Armoured tracks
+  • 1x Twin heavy bolter
+
+Rhino (75 Points)
+  • 1x Armoured tracks
+  • 1x Storm bolter
+
+OTHER DATASHEETS
+
+Aggressor Squad (120 Points)
+  • 1x Aggressor Sergeant
+     ◦ 1x Flamestorm gauntlets
+     ◦ 1x Twin power fists
+  • 2x Aggressor
+     ◦ 2x Flamestorm gauntlets
+     ◦ 2x Twin power fists
+
+Assault Intercessors with Jump Packs (90 Points)
+  • 1x Assault Intercessor Sergeant with Jump Pack
+     ◦ 1x Astartes chainsword
+     ◦ 1x Heavy bolt pistol
+  • 4x Assault Intercessors with Jump Packs
+     ◦ 4x Astartes chainsword
+     ◦ 4x Heavy bolt pistol
+
+Astraeus (525 Points)
+  • 1x Armoured hull
+  • 2x Astraeus las-ripper
+  • 1x Ironhail heavy stubber
+  • 1x Storm bolter
+  • 1x Twin heavy bolter
+  • 1x Twin macro-accelerator cannon
+
+Baal Predator (135 Points)
+  • 1x Armoured tracks
+  • 1x Twin assault cannon
+
+Ballistus Dreadnought (140 Points)
+  • 1x Armoured feet
+  • 1x Ballistus lascannon
+  • 1x Ballistus missile launcher
+  • 1x Twin storm bolter
+
+Bladeguard Veteran Squad (80 Points)
+  • 1x Bladeguard Veteran Sergeant
+     ◦ 1x Heavy bolt pistol
+     ◦ 1x Master-crafted power weapon
+  • 2x Bladeguard Veteran
+     ◦ 2x Heavy bolt pistol
+     ◦ 2x Master-crafted power weapon
+
+Brutalis Dreadnought (160 Points)
+  • 1x Brutalis bolt rifles
+  • 1x Brutalis fists
+  • 1x Twin Icarus ironhail heavy stubber
+  • 1x Twin heavy bolter
+
+Centurion Assault Squad (150 Points)
+  • 1x Assault Centurion Sergeant
+     ◦ 1x Centurion bolters
+     ◦ 1x Siege drills
+     ◦ 1x Twin flamer
+  • 2x Assault Centurion
+     ◦ 2x Centurion bolters
+     ◦ 2x Siege drills
+     ◦ 2x Twin flamer
+
+Centurion Devastator Squad (165 Points)
+  • 1x Devastator Centurion Sergeant
+     ◦ 1x Centurion bolters
+     ◦ 1x Centurion fists
+     ◦ 1x Grav-cannon
+  • 2x Devastator Centurion
+     ◦ 2x Centurion bolters
+     ◦ 2x Centurion fists
+     ◦ 2x Grav-cannon
+
+Company Heroes (105 Points)
+  • 1x Ancient
+     ◦ 1x Bolt pistol
+     ◦ 1x Bolt rifle
+     ◦ 1x Close combat weapon
+  • 1x Company Champion
+     ◦ 1x Bolt pistol
+     ◦ 1x Master-crafted power weapon
+  • 2x Company Veteran
+     ◦ 2x Bolt pistol
+     ◦ 2x Close combat weapon
+     ◦ 1x Master-crafted bolt rifle
+     ◦ 1x Master-crafted heavy bolter
+
+Death Company Dreadnought (180 Points)
+  • 1x Blood fist bolt rifles
+  • 1x Blood fists
+  • 1x Twin Icarus ironhail heavy stubber
+  • 1x Twin heavy bolter
+
+Death Company Marines (85 Points)
+  • 5x Death Company Marine
+     ◦ 5x Astartes chainsword
+     ◦ 5x Heavy bolt pistol
+
+Death Company Marines with Bolt Rifles (85 Points)
+  • 5x Death Company Marine with Bolt Rifle
+     ◦ 5x Bolt pistol
+     ◦ 5x Bolt rifle
+     ◦ 5x Close combat weapon
+
+Death Company Marines with Jump Packs (130 Points)
+  • 5x Death Company Marine with Jump Packs
+     ◦ 5x Astartes chainsword
+     ◦ 5x Heavy bolt pistol
+
+Desolation Squad (200 Points)
+  • 1x Desolation Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Castellan launcher
+     ◦ 1x Close combat weapon
+     ◦ 1x Superfrag rocket launcher
+  • 4x Desolation Marine
+     ◦ 4x Bolt pistol
+     ◦ 4x Castellan launcher
+     ◦ 4x Close combat weapon
+     ◦ 4x Superfrag rocket launcher
+
+Devastator Squad (120 Points)
+  • 1x Devastator Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Boltgun
+     ◦ 1x Close combat weapon
+  • 4x Devastator
+     ◦ 4x Bolt pistol
+     ◦ 4x Boltgun
+     ◦ 4x Close combat weapon
+
+Dreadnought (135 Points)
+  • 1x Assault cannon
+  • 1x Dreadnought combat weapon
+  • 1x Storm bolter
+
+Drop Pod (70 Points)
+  • 1x Storm bolter
+
+Eliminator Squad (85 Points)
+  • 1x Eliminator Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Bolt sniper rifle
+     ◦ 1x Close combat weapon
+  • 2x Eliminator
+     ◦ 2x Bolt pistol
+     ◦ 2x Bolt sniper rifle
+     ◦ 2x Close combat weapon
+
+Eradicator Squad (100 Points)
+  • 1x Eradicator Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Close combat weapon
+     ◦ 1x Melta rifle
+  • 2x Eradicator
+     ◦ 2x Bolt pistol
+     ◦ 2x Close combat weapon
+     ◦ 2x Melta rifle
+
+Firestrike Servo-turrets (75 Points)
+  • 1x Close combat weapon
+  • 1x Twin Firestrike las-talon
+
+Gladiator Lancer (160 Points)
+  • 1x Armoured hull
+  • 1x Lancer laser destroyer
+  • 2x Storm bolter
+
+Gladiator Reaper (160 Points)
+  • 1x Armoured hull
+  • 2x Tempest bolter
+  • 1x Twin heavy onslaught gatling cannon
+
+Gladiator Valiant (160 Points)
+  • 1x Armoured hull
+  • 2x Multi-melta
+  • 1x Twin las-talon
+
+Hammerfall Bunker (175 Points)
+  • 1x Hammerfall heavy bolter array
+  • 1x Hammerfall missile launcher
+
+Hellblaster Squad (115 Points)
+  • 1x Hellblaster Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Close combat weapon
+     ◦ 1x Plasma incinerator
+  • 4x Hellblaster
+     ◦ 4x Bolt pistol
+     ◦ 4x Close combat weapon
+     ◦ 4x Plasma incinerator
+
+Inceptor Squad (120 Points)
+  • 1x Inceptor Sergeant
+     ◦ 1x Assault bolters
+     ◦ 1x Close combat weapon
+  • 2x Inceptor
+     ◦ 2x Assault bolters
+     ◦ 2x Close combat weapon
+
+Incursor Squad (80 Points)
+  • 1x Incursor Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Occulus bolt carbine
+     ◦ 1x Paired combat blades
+  • 4x Incursor
+     ◦ 4x Bolt pistol
+     ◦ 4x Occulus bolt carbine
+     ◦ 4x Paired combat blades
+
+Infernus Squad (90 Points)
+  • 1x Infernus Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Close combat weapon
+     ◦ 1x Pyreblaster
+  • 4x Infernus Marine
+     ◦ 4x Bolt pistol
+     ◦ 4x Close combat weapon
+     ◦ 4x Pyreblaster
+
+Infiltrator Squad (100 Points)
+  • 1x Infiltrator Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Close combat weapon
+     ◦ 1x Marksman bolt carbine
+  • 4x Infiltrator
+     ◦ 4x Bolt pistol
+     ◦ 4x Close combat weapon
+     ◦ 4x Marksman bolt carbine
+
+Invader ATV (60 Points)
+  • 1x Bolt pistol
+  • 1x Close combat weapon
+  • 1x Onslaught gatling cannon
+  • 1x Twin bolt rifle
+
+Invictor Tactical Warsuit (125 Points)
+  • 1x Fragstorm grenade launcher
+  • 1x Heavy bolter
+  • 1x Incendium cannon
+  • 1x Invictor fist
+  • 1x Twin ironhail heavy stubber
+
+Land Raider (240 Points)
+  • 1x Armoured tracks
+  • 2x Godhammer lascannon
+  • 1x Twin heavy bolter
+
+Land Raider Crusader (220 Points)
+  • 1x Armoured tracks
+  • 2x Hurricane bolter
+  • 1x Twin assault cannon
+
+Land Raider Redeemer (285 Points)
+  • 1x Armoured tracks
+  • 2x Flamestorm cannon
+  • 1x Twin assault cannon
+
+Outrider Squad (80 Points)
+  • 1x Outrider Sergeant
+     ◦ 1x Astartes chainsword
+     ◦ 1x Heavy bolt pistol
+     ◦ 1x Twin bolt rifle
+  • 2x Outrider
+     ◦ 2x Astartes chainsword
+     ◦ 2x Heavy bolt pistol
+     ◦ 2x Twin bolt rifle
+
+Predator Annihilator (135 Points)
+  • 1x Armoured tracks
+  • 1x Predator twin lascannon
+
+Predator Destructor (140 Points)
+  • 1x Armoured tracks
+  • 1x Predator autocannon
+
+Redemptor Dreadnought (210 Points)
+  • 1x Heavy flamer
+  • 1x Heavy onslaught gatling cannon
+  • 1x Redemptor fist
+  • 1x Twin fragstorm grenade launcher
+
+Reiver Squad (80 Points)
+  • 1x Reiver Sergeant
+     ◦ 1x Combat knife
+     ◦ 1x Special issue bolt pistol
+  • 4x Reiver
+     ◦ 4x Combat knife
+     ◦ 4x Special issue bolt pistol
+
+Repulsor (180 Points)
+  • 1x Armoured hull
+  • 1x Heavy onslaught gatling cannon
+  • 1x Hunter-slayer missile
+  • 1x Repulsor defensive array
+  • 1x Twin heavy bolter
+
+Repulsor Executioner (220 Points)
+  • 1x Armoured hull
+  • 1x Heavy onslaught gatling cannon
+  • 1x Macro plasma incinerator
+  • 1x Repulsor Executioner defensive array
+  • 1x Twin Icarus ironhail heavy stubber
+  • 1x Twin heavy bolter
+
+Sanguinary Guard (130 Points)
+  • 3x Sanguinary Guard
+     ◦ 3x Angelus boltgun
+     ◦ 3x Encarmine blade
+
+Scout Squad (70 Points)
+  • 1x Scout Sergeant
+     ◦ 1x Bolt pistol
+     ◦ 1x Boltgun
+     ◦ 1x Close combat weapon
+  • 4x Scout
+     ◦ 4x Bolt pistol
+     ◦ 4x Boltgun
+     ◦ 4x Close combat weapon
+
+Sternguard Veteran Squad (100 Points)
+  • 1x Sternguard Veteran Sergeant
+     ◦ 1x Close combat weapon
+     ◦ 1x Sternguard bolt pistol
+     ◦ 1x Sternguard bolt rifle
+  • 4x Sternguard Veteran
+     ◦ 4x Close combat weapon
+     ◦ 4x Sternguard bolt pistol
+     ◦ 4x Sternguard bolt rifle
+
+Storm Speeder Hailstrike (115 Points)
+  • 1x Close combat weapon
+  • 2x Fragstorm grenade launcher
+  • 1x Onslaught gatling cannon
+  • 1x Twin ironhail heavy stubber
+
+Storm Speeder Hammerstrike (125 Points)
+  • 1x Close combat weapon
+  • 1x Hammerstrike missile launcher
+  • 2x Krakstorm grenade launcher
+  • 1x Melta destroyer
+
+Storm Speeder Thunderstrike (150 Points)
+  • 1x Close combat weapon
+  • 1x Stormfury missiles
+  • 1x Thunderstrike las-talon
+  • 1x Twin Icarus rocket pod
+
+Stormhawk Interceptor (155 Points)
+  • 1x Armoured hull
+  • 1x Las-talon
+  • 1x Skyhammer missile launcher
+  • 1x Twin assault cannon
+
+Stormraven Gunship (280 Points)
+  • 1x Armoured hull
+  • 2x Stormstrike missile launcher
+  • 1x Twin assault cannon
+  • 1x Typhoon missile launcher
+
+Stormtalon Gunship (165 Points)
+  • 1x Armoured hull
+  • 1x Skyhammer missile launcher
+  • 1x Twin assault cannon
+
+Suppressor Squad (75 Points)
+  • 1x Suppressor Sergeant
+     ◦ 1x Accelerator autocannon
+     ◦ 1x Bolt pistol
+     ◦ 1x Close combat weapon
+  • 2x Suppressor
+     ◦ 2x Accelerator autocannon
+     ◦ 2x Bolt pistol
+     ◦ 2x Close combat weapon
+
+Terminator Assault Squad (180 Points)
+  • 1x Assault Terminator Sergeant
+     ◦ 1x Storm Shield
+     ◦ 1x Thunder hammer
+  • 4x Assault Terminator
+     ◦ 4x Storm Shield
+     ◦ 4x Thunder hammer
+
+Terminator Squad (170 Points)
+  • 1x Terminator Sergeant
+     ◦ 1x Power fist
+     ◦ 1x Storm bolter
+  • 4x Terminator
+     ◦ 4x Power fist
+     ◦ 4x Storm bolter
+
+Thunderhawk Gunship (840 Points)
+  • 1x Armoured hull
+  • 2x Lascannon
+  • 1x Thunderhawk Cluster Bombs
+  • 1x Thunderhawk heavy cannon
+  • 4x Twin heavy bolter
+
+Vanguard Veteran Squad with Jump Packs (110 Points)
+  • 1x Vanguard Veteran Sergeant with Jump Pack
+     ◦ 1x Bolt pistol
+     ◦ 1x Vanguard Veteran weapon
+  • 4x Vanguard Veteran with Jump Pack
+     ◦ 4x Bolt pistol
+     ◦ 4x Vanguard Veteran weapon
+
+Vindicator (185 Points)
+  • 1x Armoured tracks
+  • 1x Demolisher cannon
+
+Whirlwind (190 Points)
+  • 1x Armoured tracks
+  • 1x Whirlwind vengeance launcher
+
+Exported with App Version: v1.33.0 (1), Data Version: v609

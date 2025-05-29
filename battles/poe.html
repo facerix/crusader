@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warhammer 40k Battle Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#6B7280',
+                        success: '#10B981',
+                        danger: '#EF4444',
+                        background: {
+                            light: '#FFFFFF',
+                            dark: '#181818',
+                        },
+                        imperial: '#BC2F2F',
+                        xenos: '#1E7E45',
+                        chaos: '#6D29A0',
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .battle-report-paper {
+            background-color: white;
+            background-image: 
+                linear-gradient(90deg, transparent 39px, #d6d3d3 39px, #d6d3d3 41px, transparent 41px),
+                linear-gradient(#e7e7e7 1px, transparent 1px);
+            background-size: 100% 25px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+        
+        .dark .battle-report-paper {
+            background-color: #2a2a2a;
+            background-image: 
+                linear-gradient(90deg, transparent 39px, #444 39px, #444 41px, transparent 41px),
+                linear-gradient(#444 1px, transparent 1px);
+        }
+        
+        .input-row {
+            min-height: 25px;
+            position: relative;
+            padding-left: 45px;
+            padding-right: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-primary mb-2">Warhammer 40k Battle Tracker</h1>
+            <p class="text-secondary dark:text-gray-400">Record and track your glorious victories and honorable defeats</p>
+        </header>
+
+        <div class="flex justify-end mb-6">
+            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                <svg id="moon-icon" class="w-6 h-6 hidden dark:block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                </svg>
+                <svg id="sun-icon" class="w-6 h-6 block dark:hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div id="app-container">
+            <!-- Navigation Tabs -->
+            <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+                <nav class="flex space-x-4" aria-label="Navigation">
+                    <button id="nav-summary" class="nav-btn py-2 px-4 border-b-2 border-primary font-medium text-primary focus:outline-none">Summary</button>
+                    <button id="nav-details" class="nav-btn py-2 px-4 border-b-2 border-transparent font-medium text-gray-500 dark:text-gray-400 hover:text-primary hover:border-primary focus:outline-none">Details</button>
+                    <button id="nav-new" class="nav-btn py-2 px-4 border-b-2 border-transparent font-medium text-gray-500 dark:text-gray-400 hover:text-primary hover:border-primary focus:outline-none">New Battle</button>
+                </nav>
+            </div>
+
+            <!-- Summary View -->
+            <div id="summary-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Battle summary cards will be dynamically inserted here -->
+                <div class="flex items-center justify-center col-span-full py-16" id="no-battles-message">
+                    <div class="text-center">
+                        <p class="text-xl text-gray-600 dark:text-gray-400 mb-4">No battle reports yet.</p>
+                        <button id="create-first-battle" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90 transition">Create your first battle report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details View -->
+            <div id="details-view" class="hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                    <h2 id="details-title" class="text-2xl font-bold mb-4">Battle Details</h2>
+                    
+                    <div class="battle-header grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">Battle Information</h3>
+                            <p><span class="font-medium">Date:</span> <span id="details-date"></span></p>
+                            <p><span class="font-medium">Mission:</span> <span id="details-mission"></span></p>
+                            <p><span class="font-medium">Location:</span> <span id="details-location"></span></p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">Final Score</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <p id="details-player1" class="font-medium"></p>
+                                    <p id="details-player1-army" class="text-sm text-gray-600 dark:text-gray-400"></p>
+                                    <p id="details-player1-score" class="text-2xl font-bold"></p>
+                                </div>
+                                <div>
+                                    <p id="details-player2" class="font-medium"></p>
+                                    <p id="details-player2-army" class="text-sm text-gray-600 dark:text-gray-400"></p>
+                                    <p id="details-player2-score" class="text-2xl font-bold"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4">Round-by-Round Scores</h3>
+                    <div class="overflow-x-auto mb-6">
+                        <table class="min-w-full border border-gray-300 dark:border-gray-700">
+                            <thead>
+                                <tr class="bg-gray-100 dark:bg-gray-700">
+                                    <th class="py-2 px-4 border-b">Round</th>
+                                    <th class="py-2 px-4 border-b" id="th-player1">Player 1</th>
+                                    <th class="py-2 px-4 border-b" id="th-player2">Player 2</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rounds-table-body">
+                                <!-- Round scores will be inserted here -->
+                            </tbody>
+                            <tfoot>
+                                <tr class="font-bold bg-gray-100 dark:bg-gray-700">
+                                    <td class="py-2 px-4 border-t">Total</td>
+                                    <td class="py-2 px-4 border-t" id="total-player1">0</td>
+                                    <td class="py-2 px-4 border-t" id="total-player2">0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4">Battle Events</h3>
+                    <div id="battle-events" class="mb-6 battle-report-paper p-2 rounded">
+                        <!-- Battle events will be inserted here -->
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4">Battle Scars & Notes</h3>
+                    <div id="battle-notes" class="rounded border border-gray-300 dark:border-gray-700 p-4 mb-6 bg-gray-50 dark:bg-gray-900">
+                        <!-- Battle notes will be inserted here -->
+                    </div>
+
+                    <div class="flex justify-between">
+                        <button id="back-to-summary" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md hover:bg-opacity-90 transition">Back to Summary</button>
+                        <button id="edit-battle" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90 transition">Edit Battle</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New/Edit Battle Form -->
+            <div id="battle-form" class="hidden bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h2 id="form-title" class="text-2xl font-bold mb-6">New Battle Report</h2>
+                <form id="battle-report-form">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="battle-date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date</label>
+                            <input type="date" id="battle-date" name="battle-date" required
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="battle-mission" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mission</label>
+                            <input type="text" id="battle-mission" name="battle-mission" placeholder="e.g. Crusade, Beachhead Offensive"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="battle-location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Location</label>
+                            <input type="text" id="battle-location" name="battle-location" placeholder="e.g. Local Game Store, Home"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Player 1</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="player1-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+                                    <input type="text" id="player1-name" name="player1-name" required placeholder="e.g. Rylee"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+                                </div>
+                                <div>
+                                    <label for="player1-army" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Army/Faction</label>
+                                    <input type="text" id="player1-army" name="player1-army" placeholder="e.g. Rotattacker"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Player 2</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="player2-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+                                    <input type="text" id="player2-name" name="player2-name" required placeholder="e.g. Sarah"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+                                </div>
+                                <div>
+                                    <label for="player2-army" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Army/Faction</label>
+                                    <input type="text" id="player2-army" name="player2-army" placeholder="e.g. Lamentors del"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4">Round Scoring</h3>
+                    <div class="mb-6">
+                        <div class="flex flex-col space-y-4">
+                            <div id="rounds-container">
+                                <!-- Round inputs will be generated here -->
+                            </div>
+                            <button type="button" id="add-round" class="self-start px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md hover:bg-opacity-90 transition">
+                                + Add Round
+                            </button>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4">Battle Events</h3>
+                    <div class="mb-6">
+                        <label for="battle-events-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Record key events (kills, objectives, etc.)
+                        </label>
+                        <div id="battle-events-container" class="battle-report-paper p-2 rounded min-h-[200px] mb-2">
+                            <!-- Event inputs will be here -->
+                        </div>
+                        <button type="button" id="add-event" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md hover:bg-opacity-90 transition">
+                            + Add Event Line
+                        </button>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4">Battle Scars & Notes</h3>
+                    <div class="mb-6">
+                        <textarea id="battle-notes-input" name="battle-notes" rows="4" placeholder="Record casualties, battle scars, and next battle plans here..."
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"></textarea>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <button type="button" id="cancel-battle" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md hover:bg-opacity-90 transition">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90 transition">Save Battle Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode toggle
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // App State
+        let battleReports = JSON.parse(localStorage.getItem('battleReports') || '[]');
+        let currentView = 'summary';
+        let editingBattleId = null;
+        
+        // DOM Elements
+        const summaryView = document.getElementById('summary-view');
+        const detailsView = document.getElementById('details-view');
+        const battleForm = document.getElementById('battle-form');
+        const battleEvents = document.getElementById('battle-events-container');
+        const addEventBtn = document.getElementById('add-event');
+        
+        // Navigation
+        document.getElementById('nav-summary').addEventListener('click', () => navigateTo('summary'));
+        document.getElementById('nav-details').addEventListener('click', () => {
+            if (battleReports.length > 0) {
+                navigateTo('details', battleReports[0].id);
+            } else {
+                alert('No battle reports to view');
+            }
+        });
+        document.getElementById('nav-new').addEventListener('click', () => navigateTo('form'));
+        document.getElementById('create-first-battle').addEventListener('click', () => navigateTo('form'));
+        document.getElementById('back-to-summary').addEventListener('click', () => navigateTo('summary'));
+        document.getElementById('edit-battle').addEventListener('click', () => {
+            if (editingBattleId) {
+                navigateTo('form', editingBattleId);
+            }
+        });
+        document.getElementById('cancel-battle').addEventListener('click', () => navigateTo('summary'));
+        
+        // Form events
+        document.getElementById('add-round').addEventListener('click', addRoundInputs);
+        addEventBtn.addEventListener('click', addEventLine);
+        document.getElementById('battle-report-form').addEventListener('submit', saveBattleReport);
+        
+        // Initialize app
+        init();
+        
+        function init() {
+            renderSummaryCards();
+            
+            // Add initial form elements
+            for (let i = 1; i <= 5; i++) {
+                addRoundInputs();
+            }
+            
+            for (let i = 0; i < 5; i++) {
+                addEventLine();
+            }
+            
+            // Set the current date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('battle-date').value = today;
+            
+            // Check if there are any battles
+            if (battleReports.length === 0) {
+                document.getElementById('no-battles-message').classList.remove('hidden');
+            } else {
+                document.getElementById('no-battles-message').classList.add('hidden');
+            }
+        }
+        
+        function navigateTo(view, id = null) {
+            currentView = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-primary', 'text-primary');
+                btn.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            });
+            
+            summaryView.classList.add('hidden');
+            detailsView.classList.add('hidden');
+            battleForm.classList.add('hidden');
+            
+            if (view === 'summary') {
+                document.getElementById('nav-summary').classList.add('border-primary', 'text-primary');
+                document.getElementById('nav-summary').classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+                summaryView.classList.remove('hidden');
+                renderSummaryCards();
+            } else if (view === 'details' && id) {
+                document.getElementById('nav-details').classList.add('border-primary', 'text-primary');
+                document.getElementById('nav-details').classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+                detailsView.classList.remove('hidden');
+                editingBattleId = id;
+                renderBattleDetails(id);
+            } else if (view === 'form') {
+                document.getElementById('nav-new').classList.add('border-primary', 'text-primary');
+                document.getElementById('nav-new').classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+                battleForm.classList.remove('hidden');
+                
+                if (id) {
+                    // Editing existing battle
+                    editingBattleId = id;
+                    document.getElementById('form-title').textContent = 'Edit Battle Report';
+                    loadBattleForEditing(id);
+                } else {
+                    // New battle
+                    editingBattleId = null;
+                    document.getElementById('form-title').textContent = 'New Battle Report';
+                    document.getElementById('battle-report-form').reset();
+                    document.getElementById('rounds-container').innerHTML = '';
+                    document.getElementById('battle-events-container').innerHTML = '';
+                    
+                    // Set default date
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('battle-date').value = today;
+                    
+                    // Add default rounds and event lines
+                    for (let i = 1; i <= 5; i++) {
+                        addRoundInputs();
+                    }
+                    
+                    for (let i = 0; i < 5; i++) {
+                        addEventLine();
+                    }
+                }
+            }
+        }
+        
+        function renderSummaryCards() {
+            const summaryContainer = document.getElementById('summary-view');
+            summaryContainer.innerHTML = '';
+            
+            if (battleReports.length === 0) {
+                summaryContainer.innerHTML = `
+                    <div class="flex items-center justify-center col-span-full py-16" id="no-battles-message">
+                        <div class="text-center">
+                            <p class="text-xl text-gray-600 dark:text-gray-400 mb-4">No battle reports yet.</p>
+                            <button id="create-first-battle" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90 transition">Create your first battle report</button>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('create-first-battle').addEventListener('click', () => navigateTo('form'));
+                return;
+            }
+            
+            battleReports.forEach(battle => {
+                const winner = battle.player1.totalScore > battle.player2.totalScore 
+                    ? battle.player1.name 
+                    : battle.player1.totalScore < battle.player2.totalScore 
+                        ? battle.player2.name 
+                        : 'Draw';
+                
+                const card = document.createElement('div');
+                card.className = 'bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:transform hover:scale-105';
+                card.innerHTML = `
+                    <div class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-4 py-3 flex justify-between items-center">
+                        <h3 class="text-lg font-semibold">${battle.mission || 'Unnamed Battle'}</h3>
+                        <span class="text-sm text-gray-600 dark:text-gray-400">${formatDate(battle.date)}</span>
+                    </div>
+                    <div class="p-4">
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="${battle.player1.totalScore > battle.player2.totalScore ? 'text-success' : 'text-gray-800 dark:text-gray-200'}">
+                                <p class="font-medium">${battle.player1.name}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">${battle.player1.army || ''}</p>
+                                <p class="text-2xl font-bold">${battle.player1.totalScore}</p>
+                            </div>
+                            <div class="${battle.player2.totalScore > battle.player1.totalScore ? 'text-success' : 'text-gray-800 dark:text-gray-200'}">
+                                <p class="font-medium">${battle.player2.name}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">${battle.player2.army || ''}</p>
+                                <p class="text-2xl font-bold">${battle.player2.totalScore}</p>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            <p><strong>Winner:</strong> ${winner}</p>
+                            <p><strong>Location:</strong> ${battle.location || 'Not specified'}</p>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="view-details px-3 py-1 bg-primary text-white rounded-md hover:bg-opacity-90 transition" data-id="${battle.id}">
+                                View Details
+                            </button>
+                            <div class="flex space-x-2">
+                                <button class="edit-battle px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md hover:bg-opacity-90 transition" data-id="${battle.id}">
+                                    Edit
+                                </button>
+                                <button class="delete-battle px-3 py-1 bg-danger text-white rounded-md hover:bg-opacity-90 transition" data-id="${battle.id}">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="p-4 rounded-lg shadow-md">
+                        <div class="flex items-center gap-2 text-slate-600 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar">
+                                <path d="M8 2v4"></path>
+                                <path d="M16 2v4"></path>
+                                <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                                <path d="M3 10h18"></path>
+                            </svg>
+                            <span>3/21/25</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <div class="text-center flex-1">
+                                <div class="flex items-center justify-center gap-2">
+                                    <h3 class="font-bold ${battle.player1.totalScore > battle.player2.totalScore ? 'text-success' : 'text-gray-800 dark:text-gray-200'}">
+                                        ${battle.player1.name}
+                                    </h3>
+                                </div>
+                                <p class="text-sm text-slate-600">Votann</p>
+                                <div class="text-2xl font-bold mt-2">7</div>
+                            </div>
+                            <div class="text-2xl font-bold flex items-center px-4">vs</div>
+                            <div class="text-center flex-1">
+                                <div class="flex gap-2 items-center justify-center text-success">
+                                    <h3 class="font-bold ${battle.player2.totalScore > battle.player1.totalScore ? 'text-success' : 'text-gray-800 dark:text-gray-200'}">
+                                        ${battle.player2.name}
+                                    </h3>
+                                </div>
+                                <p class="text-sm text-slate-600">Lamentors</p>
+                                <div class="font-bold mt-2 text-2xl text-success">16</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                summaryContainer.appendChild(card);
+            });
+            
+            // Add event listeners to the buttons
+            document.querySelectorAll('.view-details').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    navigateTo('details', id);
+                });
+            });
+            
+            document.querySelectorAll('.edit-battle').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    navigateTo('form', id);
+                });
+            });
+            
+            document.querySelectorAll('.delete-battle').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    if (confirm('Are you sure you want to delete this battle report?')) {
+                        deleteBattle(id);
+                    }
+                });
+            });
+        }
+        
+        function renderBattleDetails(battleId) {
+            const battle = battleReports.find(b => b.id === battleId);
+            if (!battle) return;
+            
+            // Set battle information
+            document.getElementById('details-title').textContent = battle.mission || 'Battle Details';
+            document.getElementById('details-date').textContent = formatDate(battle.date);
+            document.getElementById('details-mission').textContent = battle.mission || 'Not specified';
+            document.getElementById('details-location').textContent = battle.location || 'Not specified';
+            
+            // Set player information
+            document.getElementById('details-player1').textContent = battle.player1.name;
+            document.getElementById('details-player1-army').textContent = battle.player1.army || '';
+            document.getElementById('details-player1-score').textContent = battle.player1.totalScore;
+            document.getElementById('details-player2').textContent = battle.player2.name;
+            document.getElementById('details-player2-army').textContent = battle.player2.army || '';
+            document.getElementById('details-player2-score').textContent = battle.player2.totalScore;
+            
+            // Set table headers
+            document.getElementById('th-player1').textContent = battle.player1.name;
+            document.getElementById('th-player2').textContent = battle.player2.name;
+            
+            // Populate round scores
+            const tableBody = document.getElementById('rounds-table-body');
+            tableBody.innerHTML = '';
+            
+            battle.rounds.forEach((round, index) => {
+                const tr = document.createElement('tr');
+                tr.className = index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-900';
+                tr.innerHTML = `
+                    <td class="py-2 px-4 border-b">Round ${round.number}</td>
+                    <td class="py-2 px-4 border-b">${round.player1Score}</td>
+                    <td class="py-2 px-4 border-b">${round.player2Score}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+            
+            // Set totals
+            document.getElementById('total-player1').textContent = battle.player1.totalScore;
+            document.getElementById('total-player2').textContent = battle.player2.totalScore;
+            
+            // Display battle events
+            const battleEventsDiv = document.getElementById('battle-events');
+            battleEventsDiv.innerHTML = '';
+            
+            battle.events.forEach(event => {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'input-row';
+                eventElement.textContent = event;
+                battleEventsDiv.appendChild(eventElement);
+            });
+            
+            // Display battle notes
+            document.getElementById('battle-notes').textContent = battle.notes || 'No notes recorded for this battle.';
+        }
+        
+        function loadBattleForEditing(battleId) {
+            const battle = battleReports.find(b => b.id === battleId);
+            if (!battle) return;
+            
+            // Clear existing form elements
+            document.getElementById('rounds-container').innerHTML = '';
+            document.getElementById('battle-events-container').innerHTML = '';
+            
+            // Set battle information
+            document.getElementById('battle-date').value = battle.date;
+            document.getElementById('battle-mission').value = battle.mission || '';
+            document.getElementById('battle-location').value = battle.location || '';
+            
+            // Set player information
+            document.getElementById('player1-name').value = battle.player1.name;
+            document.getElementById('player1-army').value = battle.player1.army || '';
+            document.getElementById('player2-name').value = battle.player2.name;
+            document.getElementById('player2-army').value = battle.player2.army || '';
+            
+            // Load rounds
+            battle.rounds.forEach(round => {
+                addRoundInputs(round.number, round.player1Score, round.player2Score);
+            });
+            
+            // Load events
+            battle.events.forEach(event => {
+                addEventLine(event);
+            });
+            
+            // If there are no events, add some empty ones
+            if (battle.events.length === 0) {
+                for (let i = 0; i < 5; i++) {
+                    addEventLine();
+                }
+            }
+            
+            // Set notes
+            document.getElementById('battle-notes-input').value = battle.notes || '';
+        }
+        
+        function saveBattleReport(e) {
+            e.preventDefault();
+            
+            // Get battle information
+            const date = document.getElementById('battle-date').value;
+            const mission = document.getElementById('battle-mission').value;
+            const location = document.getElementById('battle-location').value;
+            
+            // Get player information
+            const player1Name = document.getElementById('player1-name').value;
+            const player1Army = document.getElementById('player1-army').value;
+            const player2Name = document.getElementById('player2-name').value;
+            const player2Army = document.getElementById('player2-army').value;
+            
+            // Get round scores
+            const roundElements = document.querySelectorAll('.round-input');
+            const rounds = [];
+            let player1Total = 0;
+            let player2Total = 0;
+            
+            for (let i = 0; i < roundElements.length; i += 3) {
+                const roundNumber = roundElements[i].value;
+                const player1Score = parseInt(roundElements[i + 1].value) || 0;
+                const player2Score = parseInt(roundElements[i + 2].value) || 0;
+                
+                player1Total += player1Score;
+                player2Total += player2Score;
+                
+                rounds.push({
+                    number: roundNumber,
+                    player1Score,
+                    player2Score
+                });
+            }
+            
+            // Get events
+            const eventElements = document.querySelectorAll('#battle-events-container input');
+            const events = Array.from(eventElements)
+                .map(el => el.value.trim())
+                .filter(text => text !== '');
+            
+            // Get notes
+            const notes = document.getElementById('battle-notes-input').value;
+            
+            // Create battle object
+            const battle = {
+                id: editingBattleId || Date.now().toString(),
+                date,
+                mission,
+                location,
+                player1: {
+                    name: player1Name,
+                    army: player1Army,
+                    totalScore: player1Total
+                },
+                player2: {
+                    name: player2Name,
+                    army: player2Army,
+                    totalScore: player2Total
+                },
+                rounds,
+                events,
+                notes
+            };
+            
+            // Save battle
+            if (editingBattleId) {
+                // Update existing battle
+                const index = battleReports.findIndex(b => b.id === editingBattleId);
+                if (index !== -1) {
+                    battleReports[index] = battle;
+                }
+            } else {
+                // Add new battle
+                battleReports.unshift(battle);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('battleReports', JSON.stringify(battleReports));
+            
+            // Navigate to details view
+            navigateTo('details', battle.id);
+        }
+        
+        function deleteBattle(battleId) {
+            battleReports = battleReports.filter(b => b.id !== battleId);
+            localStorage.setItem('battleReports', JSON.stringify(battleReports));
+            renderSummaryCards();
+        }
+        
+        function addRoundInputs(roundNum = '', player1Score = '', player2Score = '') {
+            const container = document.getElementById('rounds-container');
+            const roundCount = container.children.length + 1;
+            
+            const roundDiv = document.createElement('div');
+            roundDiv.className = 'grid grid-cols-5 gap-2 items-center';
+            roundDiv.innerHTML = `
+                <div class="col-span-1">
+                    <input type="text" class="round-input w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white" value="${roundNum || 'Round ' + roundCount}">
+                </div>
+                <div class="col-span-2">
+                    <input type="number" class="round-input w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white" value="${player1Score}" placeholder="Player 1 Score">
+                </div>
+                <div class="col-span-2">
+                    <input type="number" class="round-input w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-base focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white" value="${player2Score}" placeholder="Player 2 Score">
+                </div>
+            `;
+            
+            container.appendChild(roundDiv);
+        }
+        
+        function addEventLine(eventText = '') {
+            const container = document.getElementById('battle-events-container');
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'input-row mb-1';
+            eventDiv.innerHTML = `
+                <input type="text" class="w-full bg-transparent border-none focus:outline-none focus:ring-0 dark:text-white" value="${eventText}" placeholder="Enter battle event...">
+            `;
+            
+            container.appendChild(eventDiv);
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+    </script>
+</body>
+</html>

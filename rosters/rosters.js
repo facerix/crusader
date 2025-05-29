@@ -35,20 +35,15 @@ whenLoaded.then(() => {
   const rosterFlow = document.querySelector(".roster-flow");
   const editModal = document.querySelector("#roster-modal");
   const editor = editModal.querySelector("roster-editor");
-  DataStore.init();
 
-  DataStore.addEventListener("change", evt => {
-    const { detail } = evt;
-    switch (detail.changeType) {
-      case "init":
-        detail.rosters.forEach(r => rosterFlow.append(newRosterCard(r)));
-        break;
-      case "add":
-        rosterFlow.append(newRosterCard(detail.affectedRecords));
-        break;
-      default:
-        // no action to take otherwise
-        break;
+  DataStore.addEventListener("init", () => {
+    DataStore.rosters.forEach(r => rosterFlow.append(newRosterCard(r)));
+  });
+
+  DataStore.addEventListener("add", evt => {
+    const { detail: { recordType, affectedRecords} } = evt;
+    if (recordType === "roster") {
+      rosterFlow.append(newRosterCard(affectedRecords));
     }
   });
 
