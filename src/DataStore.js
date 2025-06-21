@@ -25,11 +25,136 @@ const normalize = (obj) => {
 
 let instance;
 
+const MOCK_BATTLE = {
+  id: "1978edb8-23b2-454e-b2f7-44807149db5c",
+  date: "3/21/25",
+  mission: "Supply Raid",
+  location: "Home",
+  teams: [
+    {
+      id: "",
+      name: "Skêyfyr’s Gambit",
+      player: "Rylee",
+      faction: "votann",
+      score: 7
+    },
+    {
+      id: "",
+      name: "Lamenters",
+      player: "Sarah",
+      faction: "bloodAngels",
+      score: 16
+    }
+  ],
+  attacker: 0,
+  rounds: [
+    {
+      round: 1,
+      p1Score: 0,
+      p2Score: 0,
+      kills: [
+        {
+          killed: "Beserks",
+          killedBy: "Death Company",
+          killingPlayer: 1,
+        }
+      ]
+    },
+    {
+      round: 2,
+      p1Score: 1,
+      p2Score: 2,
+      kills: [
+        {
+          killed: "Scout Squad",
+          killedBy: "Pioneers",
+          killingPlayer: 0,
+        },
+        {
+          killed: "Death Company",
+          killedBy: "Kâhl",
+          killingPlayer: 0,
+        },
+        {
+          killed: "Death Company Captain",
+          killedBy: "Keynn the Unyielding",
+          killingPlayer: 0,
+        },
+        {
+          killed: "Pioneers",
+          killedBy: "Assault Intercessors",
+          killingPlayer: 1,
+        },
+      ]
+    },
+    {
+      round: 3,
+      p1Score: 0,
+      p2Score: 2,
+      kills: [],
+    },
+    {
+      round: 4,
+      p1Score: 2,
+      p2Score: 4,
+      kills: [
+        {
+          killed: "VIPR Squad",
+          killedBy: "Baal Predator",
+          killingPlayer: 1,
+        },
+        {
+          killed: "Keynn the Unyielding",
+          killedBy: "Baal Predator",
+          killingPlayer: 1,
+        },
+        {
+          killed: "Hearthkyn Warriors",
+          killedBy: "Amadeo",
+          killingPlayer: 1,
+        },
+        {
+          killed: "Kâhl",
+          killedBy: "Amadeo",
+          killingPlayer: 1,
+        },
+      ],
+    },
+    {
+      round: 5,
+      p1Score: 4,
+      p2Score: 8,
+      kills: [
+        {
+          killed: "Baal Predator",
+          killedBy: "Þruma Squad",
+          killingPlayer: 0
+        },
+        {
+          killed: "Sagitaur",
+          killedBy: "Aggressor Squad",
+          killingPlayer: 1
+        }
+      ]
+    }
+  ],
+  scars: [
+    {
+      unit: "Scout Squad",
+      scar: "Fatigued"
+    },
+    {
+      unit: "Kêynn the Unyielding",
+      scar: "Crippling Damage"
+    },
+  ]
+};
+
 class DataStore extends EventTarget {
   #rosters = [];
   #rostersById = new Map(); // map from uuid to index in the #rosters array
   #unitsById = new Map(); // map from uuid to array of unit objects for that unit
-  #battles = [];
+  #battles = [ MOCK_BATTLE ];
   #db = null;
 
   constructor() {
@@ -227,6 +352,31 @@ class DataStore extends EventTarget {
 
   get battles() {
     return this.#battles;
+  }
+
+  async getBattleById(id) {
+    return new Promise((resolve, reject) => {
+      const battle = this.#battles.find(b => b.id === id);
+      if (battle) {
+        // const transaction = this.#db.transaction("units", "readonly");
+        // const unitsStore = transaction.objectStore("units");
+        // const index = unitsStore.index("rosterId");
+        // const request = index.getAll(id);
+
+        // request.onsuccess = (event) => {
+        //   roster.units = event.target.result || [];
+        //   this.#unitsById.set(id, roster.units);
+        //   resolve(roster);
+        // };
+
+        // request.onerror = (event) => {
+        //   reject("Error retrieving units: " + event.target.error);
+        // };
+        resolve(battle);
+      } else {
+        reject(`Roster '${id}' not found`);
+      }
+    });
   }
 
   async getRosterById(id) {

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <title>Crusader - Battle Report</title>
+  <meta charset="utf-8" />
+  <meta name="description" content="Progressive web app to keep track of Warhammer 40,000 crusades" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="canonical" href="https://crusader.facerix.com/battle/" />
+  <meta property="og:title" content="Crusader - Battle Report" />
+  <meta property="og:description" content="Progressive web app to keep track of Warhammer 40,000 crusades" />
+  <meta property="og:url" content="https://crusader.facerix.com/battle/" />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="/sword.svg" type="image/svg" />
+  <link rel="icon" href="/icon512_maskable.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/icon512_rounded.png" sizes="512x512" />
+
+  <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="modulepreload" href="battle.js" />
+
+  <style>
+    site-header {
+      button {
+        padding: 5px;
+        border: 1px transparent;
+      }
+    }
+  </style>
+</head>
+
+<body class="fill-height">
+  <site-header title="Battle Report">
+    <!--<button>
+      <img id="btnEdit" src="/images/edit.svg" alt="edit" />
+    </button>-->
+  </site-header>
+  <main>
+    <battle-report></battle-report>
+  </main>
+</body>
+<script src="battle.js" type="module" blocking="render"></script>
+
+</html>
