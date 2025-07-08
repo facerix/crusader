@@ -28,77 +28,6 @@
           flex-direction: column;
           align-items: center;
         }
-        
-      }
-
-      battle-card {
-        margin-top: 1em;
-        border: 2px outset #442222;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        width: 32rem;
-
-        --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
-        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-
-        .dateLine {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          margin-bottom: 1rem;;
-
-          img {
-            max-height: 1.25rem;
-          }
-        }
-
-        .details {
-          margin-left: auto;
-          border-color: transparent;
-        }
-
-        .results {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 1.5rem;
-
-          .player {
-            text-align: center;
-            flex: 1 1 0%;
-
-            .name {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              gap: 0.5rem;
-            }
-            h3, p {
-              margin: 0;
-            }
-          }
-
-          .vs {
-            display: flex;
-            align-items: center;
-            font-weight: 700;
-            font-size: 1.5rem;
-            line-height: 2rem;
-            padding-left: 1rem;
-            padding-right: 1rem;
-          }
-
-          .score {
-            font-weight: 700;
-            font-size: 1.5rem;
-            line-height: 2rem;
-            margin-top: 0.5rem;
-          }
-        }
-
-        img {
-          width: 2em;
-        }
       }
     </style>
   </head>
@@ -107,16 +36,14 @@
     <site-header title="Battle Reports"></site-header>
     <main>
       <div class="u-flex battle-list">
-        <button id="btnNew">
+        <button href="/battle/?new" id="btnNew">
           <img src="/images/Fast-Attack.svg" alt="create" />
           <span class="caption">Start new battle</span>
         </button>
       </div>
     </main>
 
-    <!-- <dialog id="roster-modal">
-      <roster-editor></roster-editor>
-    </dialog> -->
+    <new-battle-modal></new-battle-modal>
   </body>
   <script src="battles.js" type="module"></script>
 </html>

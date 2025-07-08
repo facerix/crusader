@@ -25,136 +25,12 @@ const normalize = (obj) => {
 
 let instance;
 
-const MOCK_BATTLE = {
-  id: "1978edb8-23b2-454e-b2f7-44807149db5c",
-  date: "3/21/25",
-  mission: "Supply Raid",
-  location: "Home",
-  teams: [
-    {
-      id: "",
-      name: "Skêyfyr’s Gambit",
-      player: "Rylee",
-      faction: "votann",
-      score: 7
-    },
-    {
-      id: "",
-      name: "Lamenters",
-      player: "Sarah",
-      faction: "bloodAngels",
-      score: 16
-    }
-  ],
-  attacker: 0,
-  rounds: [
-    {
-      round: 1,
-      p1Score: 0,
-      p2Score: 0,
-      kills: [
-        {
-          killed: "Beserks",
-          killedBy: "Death Company",
-          killingPlayer: 1,
-        }
-      ]
-    },
-    {
-      round: 2,
-      p1Score: 1,
-      p2Score: 2,
-      kills: [
-        {
-          killed: "Scout Squad",
-          killedBy: "Pioneers",
-          killingPlayer: 0,
-        },
-        {
-          killed: "Death Company",
-          killedBy: "Kâhl",
-          killingPlayer: 0,
-        },
-        {
-          killed: "Death Company Captain",
-          killedBy: "Keynn the Unyielding",
-          killingPlayer: 0,
-        },
-        {
-          killed: "Pioneers",
-          killedBy: "Assault Intercessors",
-          killingPlayer: 1,
-        },
-      ]
-    },
-    {
-      round: 3,
-      p1Score: 0,
-      p2Score: 2,
-      kills: [],
-    },
-    {
-      round: 4,
-      p1Score: 2,
-      p2Score: 4,
-      kills: [
-        {
-          killed: "VIPR Squad",
-          killedBy: "Baal Predator",
-          killingPlayer: 1,
-        },
-        {
-          killed: "Keynn the Unyielding",
-          killedBy: "Baal Predator",
-          killingPlayer: 1,
-        },
-        {
-          killed: "Hearthkyn Warriors",
-          killedBy: "Amadeo",
-          killingPlayer: 1,
-        },
-        {
-          killed: "Kâhl",
-          killedBy: "Amadeo",
-          killingPlayer: 1,
-        },
-      ],
-    },
-    {
-      round: 5,
-      p1Score: 4,
-      p2Score: 8,
-      kills: [
-        {
-          killed: "Baal Predator",
-          killedBy: "Þruma Squad",
-          killingPlayer: 0
-        },
-        {
-          killed: "Sagitaur",
-          killedBy: "Aggressor Squad",
-          killingPlayer: 1
-        }
-      ]
-    }
-  ],
-  scars: [
-    {
-      unit: "Scout Squad",
-      scar: "Fatigued"
-    },
-    {
-      unit: "Kêynn the Unyielding",
-      scar: "Crippling Damage"
-    },
-  ]
-};
-
 class DataStore extends EventTarget {
   #rosters = [];
   #rostersById = new Map(); // map from uuid to index in the #rosters array
   #unitsById = new Map(); // map from uuid to array of unit objects for that unit
-  #battles = [ MOCK_BATTLE ];
+  #battles = [];
+  #battlesById = new Map();
   #db = null;
 
   constructor() {
@@ -181,7 +57,7 @@ class DataStore extends EventTarget {
 
     request.onsuccess = (event) => {
       this.#db = event.target.result;
-      this.loadRosters();
+      this.loadData();
     };
 
     request.onerror = (event) => {
@@ -199,15 +75,22 @@ class DataStore extends EventTarget {
     this.dispatchEvent(changeEvent);
   }
 
-  async loadRosters() {
-    const transaction = this.#db.transaction("rosters", "readonly");
-    const store = transaction.objectStore("rosters");
-    const request = store.getAll();
+  async loadData() {
+    const transaction = this.#db.transaction(["rosters", "battles"], "readonly");
+    const rosterStore = transaction.objectStore("rosters");
+    const battleStore = transaction.objectStore("battles");
+    const getRosters = rosterStore.getAll();
+    const getBattles = battleStore.getAll();
 
-    request.onsuccess = (event) => {
+    getRosters.onsuccess = (event) => {
       this.#rosters = event.target.result;
-      this.#index();
-      this.#emit("init", "all", ["*"]);
+      this.#indexRosters();
+      this.#emit("init", "rosters", ["*"]);
+    };
+    getBattles.onsuccess = (event) => {
+      this.#battles = event.target.result;
+      this.#indexBattles();
+      this.#emit("init", "battles", ["*"]);
     };
   }
 
@@ -339,10 +222,17 @@ class DataStore extends EventTarget {
     });
   }
 
-  #index() {
+  #indexRosters() {
     this.#rostersById = new Map();
-    this.#rosters.forEach((roster) => {
+    this.#rosters.forEach(roster => {
       this.#rostersById.set(roster.id, roster);
+    });
+  }
+  
+  #indexBattles() {
+    this.#battlesById = new Map();
+    this.#battles.forEach(battle => {
+      this.#battlesById.set(battle.id, battle);
     });
   }
 
@@ -354,27 +244,94 @@ class DataStore extends EventTarget {
     return this.#battles;
   }
 
+  async startNewBattle(battleData) {
+    const { date, mission, attackerId, defenderId } = battleData;
+    const attacker = this.#rostersById.get(attackerId);
+    const defender = this.#rostersById.get(defenderId);
+    const newBattle = {
+      date,
+      mission,
+      location: battleData.location ?? "TBD",
+      teams: battleData.teams ?? [
+        {
+          ...attacker,
+          player: "",
+          score: -1,
+        },
+        {
+          ...defender,
+          player: "",
+          score: -1,
+        },
+      ],
+      attacker: 0,
+      rounds: battleData.rounds ?? [],
+      scars: battleData.scars ?? []
+    };
+    await this.#saveBattle(newBattle);
+  }
+
+  async deleteBattle(id) {
+    if (this.#battlesById.has(id)) {
+      const transaction = this.#db.transaction(["battles"], "readwrite");
+      const battleStore = transaction.objectStore("battles");
+  
+      // Delete the battle record
+      battleStore.delete(id);
+  
+      transaction.oncomplete = () => {
+        this.#battles = this.#battles.filter((r) => r.id !== id);
+        this.#battlesById.delete(id);
+
+        this.#emit("delete", "battle", { id });
+      };
+  
+      transaction.onerror = (event) => {
+        throw new Error("Error removing battle: ", event.target.error);
+      };
+    }
+  }
+
+  async #saveBattle(battle) {
+    const transaction = this.#db.transaction("battles", "readwrite");
+    const battleStore = transaction.objectStore("battles");
+
+    const toSave = battle.id ? battle : {
+      id: v4WithTimestamp(),
+      ...battle
+    };
+    if (battle.id) {
+      // updating existing
+      this.#battles.forEach((rec, idx) => {
+        if (rec.id === battle.id) {
+          this.#battles[idx] = battle;
+        }
+      });
+    } else {
+      this.#battles.push(toSave);
+    }
+    this.#battlesById.set(toSave.id, toSave);
+
+    await battleStore.put(toSave);
+
+    // Handle transaction completion
+    transaction.oncomplete = () => {
+      const eventType = battle.id ? "update" : "add";
+      this.#emit(eventType, "battle", toSave);
+    };
+
+    transaction.onerror = (event) => {
+      console.error("Transaction failed: ", event.target.error);
+    };
+  }
+
   async getBattleById(id) {
     return new Promise((resolve, reject) => {
-      const battle = this.#battles.find(b => b.id === id);
+      const battle = this.#battlesById.get(id);
       if (battle) {
-        // const transaction = this.#db.transaction("units", "readonly");
-        // const unitsStore = transaction.objectStore("units");
-        // const index = unitsStore.index("rosterId");
-        // const request = index.getAll(id);
-
-        // request.onsuccess = (event) => {
-        //   roster.units = event.target.result || [];
-        //   this.#unitsById.set(id, roster.units);
-        //   resolve(roster);
-        // };
-
-        // request.onerror = (event) => {
-        //   reject("Error retrieving units: " + event.target.error);
-        // };
         resolve(battle);
       } else {
-        reject(`Roster '${id}' not found`);
+        reject(`Battle '${id}' not found`);
       }
     });
   }

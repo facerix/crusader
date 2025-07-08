@@ -102,6 +102,7 @@ main {
   background: transparent;
   cursor: pointer;
   font-variant: common-ligatures small-caps;
+  text-decoration: none;
   
   img {
     height: 2em;
@@ -119,6 +120,13 @@ main {
   &:not(:disabled):focus-visible {
     outline: #7c0028 auto 1px;
     background-color: #ddbfc67a;
+  }
+}
+
+a.btn {
+  &:not(:disabled):hover,
+  &:not(:disabled):focus-visible {
+   text-decoration: underline;
   }
 }
 

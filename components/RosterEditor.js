@@ -122,7 +122,7 @@ class RosterEditor extends HTMLElement {
     this.innerHTML = jsx`
 			<style>${CSS}</style>
 			<header><h3>${title}</h3></header>
-            ${FORM_MARKUP}
+      ${FORM_MARKUP}
 			<footer>
 				<button id="cancel">Cancel</button>
 				<button id="save" type="submit" disabled>Save Roster</button>

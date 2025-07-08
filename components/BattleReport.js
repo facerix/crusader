@@ -141,14 +141,14 @@ const reportRaw = (battle) => {
       teams: [
         {
           id: "",
-          name: "Skêyfyr’s Gambit",
+          armyName: "Skêyfyr’s Gambit",
           player: "Rylee",
           faction: "votann",
           score: 7
         },
         {
           id: "",
-          name: "Lamenters",
+          armyName: "Lamenters",
           player: "Sarah",
           faction: "bloodAngels",
           score: 16
@@ -187,7 +187,7 @@ const reportRaw = (battle) => {
           <div class="player ${winner === 0 ? 'winner' : ''}">
             <div class="name">
               <img src="${FACTION_IMAGE_URLS[p1.faction]}" alt="${p1.faction}" />
-              <strong>${p1.name}</strong>
+              <strong>${p1.armyName}</strong>
             </div>
             <p>${p1.player}</p>
             <div class="score">${p1.score}</div>
@@ -195,7 +195,7 @@ const reportRaw = (battle) => {
           <div class="player ${winner === 1 ? 'winner' : ''}">
             <div class="name">
               <img src="${FACTION_IMAGE_URLS[p2.faction]}" alt="${p2.faction}" />
-              <strong>${p2.name}</strong>
+              <strong>${p2.armyName}</strong>
             </div>
             <p>${p2.player}</p>
             <div class="score">${p2.score}</div>
@@ -234,14 +234,13 @@ const reportRaw = (battle) => {
         </tr>
       </tfoot>
     </table>
-    ${scars.length && jsx`
+    ${scars.length > 0 ? jsx`
       <h3>Battle Scars & Honors</h3>
       <ul class="scars">
         ${scars.map(s => `<li>${s.unit}: ${s.scar}</li>`)}
       </ul>
-    `}
-    <ul>
-    </ul>`;
+    ` : ''}
+  `;
 }
 
 class BattleReport extends HTMLElement {
@@ -260,21 +259,10 @@ class BattleReport extends HTMLElement {
     style.innerHTML = CSS;
     this.shadowRoot.appendChild(style);
     this.shadowRoot.appendChild(this.#article);
-
-    // // this.#modal = this.querySelector("dialog");
-    // // this.#editor = this.querySelector("recipe-editor");
-    // this.#article = this.querySelector("article");
-    // // this.#editor.onCancel = this.onCancelEdit.bind(this);
-    // // this.#editor.onSave = this.onSaveEdit.bind(this);
-    // this.hydrate();
   }
 
   set battle(data) {
     this.#data = data;
-    // this.innerHTML = jsx`
-		// 	<style>${CSS}</style>
-		// 	<article> </article>
-		// `;
     this.hydrate();
   }
 
